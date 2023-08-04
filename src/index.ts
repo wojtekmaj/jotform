@@ -156,16 +156,45 @@ function options(options = {}) {
  * General
  */
 
-function getHistory(
-  query: {
-    action?: string;
-    date?: string;
-    sortBy?: string;
-    startDate?: string;
-    endDate?: string;
-  } = {},
-  customHeaders?: HeadersInit,
-): Promise<unknown> {
+type GetHistoryQuery = {
+  /**
+   * Filter results by activity performed. Default is 'all'.
+   */
+  action?:
+    | 'all'
+    | 'userCreation'
+    | 'userLogin'
+    | 'formCreation'
+    | 'formUpdate'
+    | 'formDelete'
+    | 'formPurge';
+  /**
+   * Limit results by a date range. If you'd like to limit results by specific dates you can use startDate and endDate fields instead.
+   */
+  date?: 'lastWeek' | 'lastMonth' | 'last3Months' | 'last6Months' | 'lastYear' | 'all';
+  /**
+   * Lists results by ascending and descending order
+   */
+  sortBy?: 'ASC' | 'DESC';
+  /**
+   * Limit results to only after a specific date. Format: MM/DD/YYYY.
+   */
+  startDate?: string;
+  /**
+   * Limit results to only before a specific date. Format: MM/DD/YYYY.
+   */
+  endDate?: string;
+};
+
+/**
+ * User activity log about things like forms created/modified/deleted, account logins and other operations.
+ *
+ * @link https://api.jotform.com/docs/#user-history
+ * @param {GetHistoryQuery} [query]
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
+function getHistory(query: GetHistoryQuery = {}, customHeaders?: HeadersInit): Promise<unknown> {
   const { action, date, sortBy, startDate, endDate } = query;
 
   const endPoint = '/user/history';
@@ -181,6 +210,13 @@ function getHistory(
   return promise;
 }
 
+/**
+ * Get user's time zone and language.
+ *
+ * @link https://api.jotform.com/docs/#user-settings
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function getSettings(customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = '/user/settings';
   const requestUrl = getRequestUrl(endPoint);
@@ -189,6 +225,13 @@ function getSettings(customHeaders?: HeadersInit): Promise<unknown> {
   return promise;
 }
 
+/**
+ * Get a list of sub users for this accounts and list of forms and form folders with access privileges.
+ *
+ * @link https://api.jotform.com/docs/#user-subusers
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function getSubusers(customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = '/user/subusers';
   const requestUrl = getRequestUrl(endPoint);
@@ -197,6 +240,13 @@ function getSubusers(customHeaders?: HeadersInit): Promise<unknown> {
   return promise;
 }
 
+/**
+ * Get number of form submissions received this month. Also, get number of SSL form submissions, payment form submissions and upload space used by user.
+ *
+ * @link https://api.jotform.com/docs/#user-usage
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function getUsage(customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = '/user/usage';
   const requestUrl = getRequestUrl(endPoint);
@@ -205,6 +255,13 @@ function getUsage(customHeaders?: HeadersInit): Promise<unknown> {
   return promise;
 }
 
+/**
+ * Get user account details for this Jotform user. Including user account type, avatar URL, name, email, website URL.
+ *
+ * @link https://api.jotform.com/docs/#user
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function getUser(customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = '/user';
   const requestUrl = getRequestUrl(endPoint);
@@ -217,17 +274,23 @@ function getUser(customHeaders?: HeadersInit): Promise<unknown> {
  * Forms
  */
 
-function getForms(
-  query: {
-    filter?: Record<string, string>;
-    offset?: string;
-    limit?: string;
-    orderby?: string;
-    direction?: 'ASC' | 'DESC';
-    fullText?: string;
-  } = {},
-  customHeaders?: HeadersInit,
-): Promise<unknown> {
+type GetFormsQuery = {
+  filter?: Record<string, string>;
+  offset?: string;
+  limit?: string;
+  orderby?: string;
+  direction?: 'ASC' | 'DESC';
+  fullText?: string;
+};
+
+/**
+ * Get a list of forms for this account. Includes basic details such as title of the form, when it was created, number of new and total submissions.
+ *
+ * @param {GetFormsQuery} [query]
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
+function getForms(query: GetFormsQuery = {}, customHeaders?: HeadersInit): Promise<unknown> {
   const { filter, offset, limit, orderby, direction, fullText } = query;
 
   if (filter && typeof filter !== 'object') {
@@ -252,6 +315,12 @@ function getForms(
   return promise;
 }
 
+/**
+ * Get basic information about a form. Use /form/{id}/questions to get the list of questions.
+ * @param {string} formID
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function getForm(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
@@ -264,6 +333,14 @@ function getForm(formID: string, customHeaders?: HeadersInit): Promise<unknown> 
   return promise;
 }
 
+/**
+ * Create new form with questions, properties and email settings.
+ *
+ * @link https://api.jotform.com/docs/#post-forms
+ * @param {unknown} formData
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function createForm(formData: unknown, customHeaders?: HeadersInit): Promise<unknown> {
   if (typeof formData !== 'object' || formData === null) {
     return Promise.resolve();
@@ -277,6 +354,14 @@ function createForm(formData: unknown, customHeaders?: HeadersInit): Promise<unk
   return promise;
 }
 
+/**
+ * Create new forms with questions, properties and email settings.
+ *
+ * @link https://api.jotform.com/docs/#put-forms
+ * @param {unknown} formsData
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function createForms(formsData: unknown, customHeaders?: HeadersInit): Promise<unknown> {
   if (typeof formsData !== 'object' || formsData === null) {
     return Promise.resolve();
@@ -290,6 +375,14 @@ function createForms(formsData: unknown, customHeaders?: HeadersInit): Promise<u
   return promise;
 }
 
+/**
+ * Delete an existing form.
+ *
+ * @link https://api.jotform.com/docs/#delete-form-id
+ * @param {string} formID
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function deleteForm(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = `/form/${formID}`;
   const requestUrl = getRequestUrl(endPoint);
@@ -298,6 +391,14 @@ function deleteForm(formID: string, customHeaders?: HeadersInit): Promise<unknow
   return promise;
 }
 
+/**
+ * Clone a single form.
+ *
+ * @link https://api.jotform.com/docs/#post-form-id-clone
+ * @param {string} formID
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function cloneForm(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = `/form/${formID}/clone`;
   const requestUrl = getRequestUrl(endPoint);
@@ -310,6 +411,14 @@ function cloneForm(formID: string, customHeaders?: HeadersInit): Promise<unknown
  * Form files
  */
 
+/**
+ * List of files uploaded on a form. Size and file type is also included.
+ *
+ * @link https://api.jotform.com/docs/#form-id-files
+ * @param {string} formID
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function getFormFiles(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
