@@ -192,7 +192,7 @@ function getRequestUrl(
  * @description Update client options.
  * @param {Partial<Options>} [newOptions]
  */
-function options(newOptions: Partial<Options>) {
+export function options(newOptions: Partial<Options>) {
   Object.assign(currentOptions, newOptions);
 
   if (currentOptions.debug) {
@@ -251,7 +251,10 @@ type GetHistoryQuery = {
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function getHistory(query: GetHistoryQuery = {}, customHeaders?: HeadersInit): Promise<unknown> {
+export function getHistory(
+  query: GetHistoryQuery = {},
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
   const { action, date, sortBy, startDate, endDate } = query;
 
   const endPoint = '/user/history';
@@ -275,7 +278,7 @@ function getHistory(query: GetHistoryQuery = {}, customHeaders?: HeadersInit): P
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function getSettings(customHeaders?: HeadersInit): Promise<unknown> {
+export function getSettings(customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = '/user/settings';
   const requestUrl = getRequestUrl(endPoint);
 
@@ -292,7 +295,10 @@ function getSettings(customHeaders?: HeadersInit): Promise<unknown> {
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function updateSettings(settingsData: unknown, customHeaders?: HeadersInit): Promise<unknown> {
+export function updateSettings(
+  settingsData: unknown,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
   if (typeof settingsData !== 'object' || settingsData === null) {
     return Promise.resolve();
   }
@@ -313,7 +319,7 @@ function updateSettings(settingsData: unknown, customHeaders?: HeadersInit): Pro
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function getSubusers(customHeaders?: HeadersInit): Promise<unknown> {
+export function getSubusers(customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = '/user/subusers';
   const requestUrl = getRequestUrl(endPoint);
 
@@ -329,7 +335,7 @@ function getSubusers(customHeaders?: HeadersInit): Promise<unknown> {
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function getUsage(customHeaders?: HeadersInit): Promise<unknown> {
+export function getUsage(customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = '/user/usage';
   const requestUrl = getRequestUrl(endPoint);
 
@@ -345,7 +351,7 @@ function getUsage(customHeaders?: HeadersInit): Promise<unknown> {
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function getUser(customHeaders?: HeadersInit): Promise<unknown> {
+export function getUser(customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = '/user';
   const requestUrl = getRequestUrl(endPoint);
 
@@ -359,7 +365,7 @@ function getUser(customHeaders?: HeadersInit): Promise<unknown> {
  * @description Get limit and prices of a plan.
  * @param {string} planName
  */
-function getPlan(planName: string, customHeaders?: HeadersInit): Promise<unknown> {
+export function getPlan(planName: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (planName === undefined) {
     throw new Error('Plan name is undefined');
   }
@@ -416,7 +422,7 @@ type GetFormsQuery = {
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function getForms(query: GetFormsQuery = {}, customHeaders?: HeadersInit): Promise<unknown> {
+export function getForms(query: GetFormsQuery = {}, customHeaders?: HeadersInit): Promise<unknown> {
   const { filter, offset, limit, orderby, direction, fullText } = query;
 
   if (filter && typeof filter !== 'object') {
@@ -450,7 +456,7 @@ function getForms(query: GetFormsQuery = {}, customHeaders?: HeadersInit): Promi
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function getForm(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
+export function getForm(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (typeof formID === 'undefined' || formID === null) {
     throw new Error('formID is required');
   }
@@ -471,7 +477,7 @@ function getForm(formID: string, customHeaders?: HeadersInit): Promise<unknown> 
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function createForm(formData: unknown, customHeaders?: HeadersInit): Promise<unknown> {
+export function createForm(formData: unknown, customHeaders?: HeadersInit): Promise<unknown> {
   if (typeof formData !== 'object' || formData === null) {
     throw new Error('formData must be an object');
   }
@@ -493,7 +499,7 @@ function createForm(formData: unknown, customHeaders?: HeadersInit): Promise<unk
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function createForms(formsData: unknown, customHeaders?: HeadersInit): Promise<unknown> {
+export function createForms(formsData: unknown, customHeaders?: HeadersInit): Promise<unknown> {
   if (typeof formsData === 'undefined' || formsData === null) {
     throw new Error('formsData is required');
   }
@@ -515,7 +521,7 @@ function createForms(formsData: unknown, customHeaders?: HeadersInit): Promise<u
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function deleteForm(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
+export function deleteForm(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (typeof formID === 'undefined' || formID === null) {
     throw new Error('formID is required');
   }
@@ -536,7 +542,7 @@ function deleteForm(formID: string, customHeaders?: HeadersInit): Promise<unknow
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function cloneForm(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
+export function cloneForm(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (typeof formID === 'undefined' || formID === null) {
     throw new Error('formID is required');
   }
@@ -561,7 +567,7 @@ function cloneForm(formID: string, customHeaders?: HeadersInit): Promise<unknown
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function getFormFiles(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
+export function getFormFiles(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (typeof formID === 'undefined' || formID === null) {
     throw new Error('formID is required');
   }
@@ -586,7 +592,7 @@ function getFormFiles(formID: string, customHeaders?: HeadersInit): Promise<unkn
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function getFormProperties(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
+export function getFormProperties(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (typeof formID === 'undefined' || formID === null) {
     throw new Error('formID is required');
   }
@@ -608,7 +614,7 @@ function getFormProperties(formID: string, customHeaders?: HeadersInit): Promise
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function getFormProperty(
+export function getFormProperty(
   formID: string,
   key: string,
   customHeaders?: HeadersInit,
@@ -634,7 +640,7 @@ function getFormProperty(
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function addFormProperty(
+export function addFormProperty(
   formID: string,
   propertyData: unknown,
   customHeaders?: HeadersInit,
@@ -665,7 +671,7 @@ function addFormProperty(
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function addFormProperties(
+export function addFormProperties(
   formID: string,
   propertyData: unknown,
   customHeaders?: HeadersInit,
@@ -699,7 +705,7 @@ function addFormProperties(
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function getFormQuestions(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
+export function getFormQuestions(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (typeof formID === 'undefined' || formID === null) {
     throw new Error('formID is required');
   }
@@ -721,7 +727,7 @@ function getFormQuestions(formID: string, customHeaders?: HeadersInit): Promise<
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function getFormQuestion(
+export function getFormQuestion(
   formID: string,
   questionID: string,
   customHeaders?: HeadersInit,
@@ -751,7 +757,7 @@ function getFormQuestion(
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function addFormQuestion(
+export function addFormQuestion(
   formID: string,
   questionData: unknown,
   customHeaders?: HeadersInit,
@@ -782,7 +788,7 @@ function addFormQuestion(
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function addFormQuestions(
+export function addFormQuestions(
   formID: string,
   questionData: unknown,
   customHeaders?: HeadersInit,
@@ -813,7 +819,7 @@ function addFormQuestions(
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function deleteFormQuestion(
+export function deleteFormQuestion(
   formID: string,
   questionID: string,
   customHeaders?: HeadersInit,
@@ -846,7 +852,7 @@ function deleteFormQuestion(
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function getFormReports(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
+export function getFormReports(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (typeof formID === 'undefined' || formID === null) {
     throw new Error('formID is required');
   }
@@ -868,7 +874,7 @@ function getFormReports(formID: string, customHeaders?: HeadersInit): Promise<un
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function getFormReport(
+export function getFormReport(
   formID: string,
   reportID: string,
   customHeaders?: HeadersInit,
@@ -886,7 +892,7 @@ function getFormReport(
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function createFormReport(
+export function createFormReport(
   formID: string,
   reportData: unknown,
   customHeaders?: HeadersInit,
@@ -917,7 +923,7 @@ function createFormReport(
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function deleteFormReport(
+export function deleteFormReport(
   formID: string,
   reportID: string,
   customHeaders?: HeadersInit,
@@ -971,7 +977,7 @@ type GetFormSubmissionsQuery = {
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function getFormSubmissions(
+export function getFormSubmissions(
   formID: string,
   query: GetFormSubmissionsQuery = {},
   customHeaders?: HeadersInit,
@@ -1013,7 +1019,7 @@ function getFormSubmissions(
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function getFormSubmission(
+export function getFormSubmission(
   formID: string,
   submissionID: string,
   customHeaders?: HeadersInit,
@@ -1031,7 +1037,7 @@ function getFormSubmission(
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function createFormSubmission(
+export function createFormSubmission(
   formID: string,
   submissionData: unknown,
   customHeaders?: HeadersInit,
@@ -1062,7 +1068,7 @@ function createFormSubmission(
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function createFormSubmissions(
+export function createFormSubmissions(
   formID: string,
   submissionsData: unknown,
   customHeaders?: HeadersInit,
@@ -1093,7 +1099,7 @@ function createFormSubmissions(
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function deleteFormSubmission(
+export function deleteFormSubmission(
   formID: string,
   submissionID: string,
   customHeaders?: HeadersInit,
@@ -1114,7 +1120,7 @@ function deleteFormSubmission(
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function getFormWebhooks(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
+export function getFormWebhooks(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (typeof formID === 'undefined' || formID === null) {
     throw new Error('formID is required');
   }
@@ -1136,7 +1142,7 @@ function getFormWebhooks(formID: string, customHeaders?: HeadersInit): Promise<u
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function createFormWebhook(
+export function createFormWebhook(
   formID: string,
   webhookURL: string,
   customHeaders?: HeadersInit,
@@ -1169,7 +1175,7 @@ function createFormWebhook(
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function deleteFormWebhook(
+export function deleteFormWebhook(
   formID: string,
   webhookID: string,
   customHeaders?: HeadersInit,
@@ -1201,7 +1207,7 @@ function deleteFormWebhook(
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function getFolders(customHeaders?: HeadersInit): Promise<unknown> {
+export function getFolders(customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = '/user/folders';
   const requestUrl = getRequestUrl(endPoint);
 
@@ -1218,7 +1224,7 @@ function getFolders(customHeaders?: HeadersInit): Promise<unknown> {
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>
  */
-function getFolder(folderID: string, customHeaders?: HeadersInit): Promise<unknown> {
+export function getFolder(folderID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (typeof folderID === 'undefined' || folderID === null) {
     throw new Error('folderID is required');
   }
@@ -1239,7 +1245,10 @@ function getFolder(folderID: string, customHeaders?: HeadersInit): Promise<unkno
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function createFolder(folderProperties: unknown, customHeaders?: HeadersInit): Promise<unknown> {
+export function createFolder(
+  folderProperties: unknown,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
   if (typeof folderProperties !== 'object' || folderProperties === null) {
     throw new Error('folderProperties must be an object');
   }
@@ -1262,7 +1271,7 @@ function createFolder(folderProperties: unknown, customHeaders?: HeadersInit): P
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function updateFolder(
+export function updateFolder(
   folderID: string,
   folderProperties: unknown,
   customHeaders?: HeadersInit,
@@ -1283,7 +1292,7 @@ function updateFolder(
   return promise;
 }
 
-function addFormToFolder(
+export function addFormToFolder(
   folderID: string,
   formID: string,
   customHeaders?: HeadersInit,
@@ -1303,7 +1312,7 @@ function addFormToFolder(
   return updateFolder(folderID, addFormProperties, customHeaders);
 }
 
-function addFormsToFolder(
+export function addFormsToFolder(
   folderID: string,
   formIDs: string[],
   customHeaders?: HeadersInit,
@@ -1332,7 +1341,7 @@ function addFormsToFolder(
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function deleteFolder(folderID: string, customHeaders?: HeadersInit): Promise<unknown> {
+export function deleteFolder(folderID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (typeof folderID === 'undefined' || folderID === null) {
     throw new Error('folderID is required');
   }
@@ -1356,7 +1365,7 @@ function deleteFolder(folderID: string, customHeaders?: HeadersInit): Promise<un
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function getReports(customHeaders?: HeadersInit): Promise<unknown> {
+export function getReports(customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = '/user/reports';
   const requestUrl = getRequestUrl(endPoint);
 
@@ -1373,7 +1382,7 @@ function getReports(customHeaders?: HeadersInit): Promise<unknown> {
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function getReport(reportID: string, customHeaders?: HeadersInit): Promise<unknown> {
+export function getReport(reportID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (typeof reportID === 'undefined' || reportID === null) {
     throw new Error('reportID is required');
   }
@@ -1394,7 +1403,7 @@ function getReport(reportID: string, customHeaders?: HeadersInit): Promise<unkno
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function deleteReport(reportID: string, customHeaders?: HeadersInit): Promise<unknown> {
+export function deleteReport(reportID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (typeof reportID === 'undefined' || reportID === null) {
     throw new Error('reportID is required');
   }
@@ -1454,7 +1463,7 @@ type GetSubmissionsQuery = {
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function getSubmissions(
+export function getSubmissions(
   query: GetSubmissionsQuery = {},
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
@@ -1492,7 +1501,7 @@ function getSubmissions(
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function getSubmission(submissionID: string, customHeaders?: HeadersInit): Promise<unknown> {
+export function getSubmission(submissionID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (typeof submissionID === 'undefined' || submissionID === null) {
     throw new Error('submissionID is required');
   }
@@ -1514,7 +1523,7 @@ function getSubmission(submissionID: string, customHeaders?: HeadersInit): Promi
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function updateSubmission(
+export function updateSubmission(
   submissionID: string,
   submissionData: unknown,
   customHeaders?: HeadersInit,
@@ -1544,7 +1553,10 @@ function updateSubmission(
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-function deleteSubmission(submissionID: string, customHeaders?: HeadersInit): Promise<unknown> {
+export function deleteSubmission(
+  submissionID: string,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
   if (typeof submissionID === 'undefined' || submissionID === null) {
     throw new Error('submissionID is required');
   }
@@ -1556,79 +1568,8 @@ function deleteSubmission(submissionID: string, customHeaders?: HeadersInit): Pr
   return promise;
 }
 
-export default {
-  options,
+/* For backwards compatibility */
+export const getFormPropertyByKey = getFormProperty;
 
-  /* General */
-  getHistory,
-  getSettings,
-  updateSettings,
-  getSubusers,
-  getUsage,
-  getUser,
-  getPlan,
-
-  /* Forms */
-  getForms,
-  getForm,
-  createForm,
-  createForms,
-  deleteForm,
-  cloneForm,
-
-  /* Form files */
-  getFormFiles,
-
-  /* Form properties */
-  getFormProperties,
-  getFormProperty,
-  getFormPropertyByKey: getFormProperty, // For backwards compatibility
-  addFormProperty,
-  addFormProperties,
-
-  /* Form questions */
-  getFormQuestions,
-  getFormQuestion,
-  addFormQuestion,
-  addFormQuestions,
-  deleteFormQuestion,
-
-  /* Form reports */
-  getFormReports,
-  getFormReport,
-  createFormReport,
-  deleteFormReport,
-
-  /* Form submissions */
-  getFormSubmissions,
-  getFormSubmission,
-  createFormSubmission,
-  createFormSubmissions,
-  deleteFormSubmission,
-
-  /* Form webhooks */
-  getFormWebhooks,
-  createFormWebhook,
-  deleteFormWebhook,
-
-  /* Folders */
-  getFolders,
-  getFolder,
-  createFolder,
-  updateFolder,
-  addFormToFolder,
-  addFormsToFolder,
-  deleteFolder,
-
-  /* Reports */
-  getReports,
-  getReport,
-  deleteReport,
-
-  /* Submissions */
-  getSubmissions,
-  getSubmission,
-  updateSubmission,
-  editSubmission: updateSubmission, // For backwards compatibility
-  deleteSubmission,
-};
+/* For backwards compatibility */
+export const editSubmission = updateSubmission;
