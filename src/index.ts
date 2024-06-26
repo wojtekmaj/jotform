@@ -192,7 +192,7 @@ function getRequestUrl(
  * @description Update client options.
  * @param {Partial<Options>} [newOptions]
  */
-export function options(newOptions: Partial<Options>) {
+export function options(newOptions: Partial<Options>): void {
   Object.assign(currentOptions, newOptions);
 
   if (currentOptions.debug) {
@@ -1569,7 +1569,15 @@ export function deleteSubmission(
 }
 
 /* For backwards compatibility */
-export const getFormPropertyByKey = getFormProperty;
+export const getFormPropertyByKey: (
+  formID: string,
+  key: string,
+  customHeaders?: HeadersInit,
+) => Promise<unknown> = getFormProperty;
 
 /* For backwards compatibility */
-export const editSubmission = updateSubmission;
+export const editSubmission: (
+  submissionID: string,
+  submissionData: unknown,
+  customHeaders?: HeadersInit,
+) => Promise<unknown> = updateSubmission;
