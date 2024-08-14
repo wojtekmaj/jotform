@@ -875,7 +875,7 @@ export function getFormReports(formID: string, customHeaders?: HeadersInit): Pro
  * @returns {Promise<unknown>}
  */
 export function getFormReport(
-  formID: string,
+  _formID: string,
   reportID: string,
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
@@ -924,7 +924,7 @@ export function createFormReport(
  * @returns {Promise<unknown>}
  */
 export function deleteFormReport(
-  formID: string,
+  _formID: string,
   reportID: string,
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
@@ -1020,7 +1020,7 @@ export function getFormSubmissions(
  * @returns {Promise<unknown>}
  */
 export function getFormSubmission(
-  formID: string,
+  _formID: string,
   submissionID: string,
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
@@ -1100,7 +1100,7 @@ export function createFormSubmissions(
  * @returns {Promise<unknown>}
  */
 export function deleteFormSubmission(
-  formID: string,
+  _formID: string,
   submissionID: string,
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
