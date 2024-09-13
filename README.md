@@ -101,23 +101,24 @@ Jotform API documentation is available at https://api.jotform.com/docs/.
 
 ## `jotform` vs `@wojtekmaj/jotform`
 
-`@wojtekmaj/jotform` is a fork of `jotform` package. It was created to add TypeScript support, ship some long-awaited
+`@wojtekmaj/jotform` is a fork of `jotform` v0 package. It was created to add TypeScript support, ship some long-awaited
 features, add new features and fix bugs. It was rebuilt from the ground up to benefit from the latest JavaScript
 features and to be more maintainable.
 
-`@wojtekmaj/jotform` is meant to be a drop-in replacement for `jotform` package, so you can use it without any changes to your code.
+`@wojtekmaj/jotform` is meant to be a drop-in replacement for `jotform` v0 package, so you can use it without any changes to your code.
 
 Here's how the two packages compare:
 
-| Feature                | `jotform`          | `@wojtekmaj/jotform` |
-| ---------------------- | ------------------ | -------------------- |
-| TypeScript support     | ❌                 | ✅                   |
-| Jotform Teams support  | ❌                 | ✅                   |
-| Tests                  | ❌                 | ✅                   |
-| Methods available      | 36                 | 50                   |
-| Number of dependencies | 2                  | 1                    |
-| Bundle size            | 38.3 kB (min+gzip) | 3.5 kB (min+gzip)    |
-| Install size           | 2.35 MB            | 236 kB               |
+| Feature                | `jotform` v0       | `jotform` v1     | `@wojtekmaj/jotform` |
+| ---------------------- | ------------------ | ---------------- | -------------------- |
+| ESM support            | ❌                 | ❌               | ✅                   |
+| TypeScript support     | ❌                 | ✅               | ✅                   |
+| Jotform Teams support  | ❌                 | ❌               | ✅                   |
+| Tests                  | ❌                 | ✅               | ✅                   |
+| Methods available      | 36                 | 45               | 50                   |
+| Number of dependencies | 2                  | 2                | 1                    |
+| Bundle size            | 38.3 kB (min+gzip) | 13 kB (min+gzip) | 3.5 kB (min+gzip)    |
+| Install size           | 2.35 MB            | 2.33 MB          | 236 kB               |
 
 ## License
 
