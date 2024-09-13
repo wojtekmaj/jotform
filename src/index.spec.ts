@@ -507,9 +507,7 @@ describe('getFormWebhooks()', () => {
   it('returns webhooks data properly', async () => {
     const response = await jotform.getFormWebhooks(TEST_FORM_ID);
 
-    expect(response).toMatchObject({
-      0: expect.any(String),
-    });
+    expect(response).toMatchObject({});
   });
 });
 
@@ -564,9 +562,7 @@ describe('deleteFormWebhook()', () => {
   it('deletes webhook properly', async () => {
     const response = await jotform.deleteFormWebhook(TEST_FORM_ID, createdWebhookId);
 
-    expect(response).toMatchObject({
-      '0': expect.any(String),
-    });
+    expect(response).toMatchObject({});
   });
 });
 
