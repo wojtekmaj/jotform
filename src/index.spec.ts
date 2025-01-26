@@ -306,11 +306,87 @@ describe('getFormQuestion()', () => {
   });
 });
 
-describe.todo('addFormQuestion()');
+describe('addFormQuestion()', () => {
+  const createdQuestionIds: string[] = [];
 
-describe.todo('addFormQuestions()');
+  afterAll(async () => {
+    await asyncForEach(createdQuestionIds, async (questionId) => {
+      await jotform.deleteFormQuestion(TEST_FORM_ID, questionId);
+    });
+  });
 
-describe.todo('deleteFormQuestion()');
+  it('adds form question properly', async () => {
+    const response = await jotform.addFormQuestion(TEST_FORM_ID, {
+      question: {
+        type: 'control_head',
+      },
+    });
+
+    expect(response).toMatchObject({
+      qid: expect.any(Number),
+    });
+
+    const anyResponse = z.any().parse(response);
+
+    // Store question ID for later use
+    createdQuestionIds.push(anyResponse.qid.toString());
+  });
+});
+
+describe('addFormQuestions()', () => {
+  const createdQuestionIds: string[] = [];
+
+  afterAll(async () => {
+    await asyncForEach(createdQuestionIds, async (questionId) => {
+      await jotform.deleteFormQuestion(TEST_FORM_ID, questionId);
+    });
+  });
+
+  it('adds form questions properly', async () => {
+    const response = await jotform.addFormQuestions(TEST_FORM_ID, {
+      questions: [
+        {
+          type: 'control_head',
+        },
+      ],
+    });
+
+    expect(response).toMatchObject(expect.any(Array));
+
+    const anyResponse = z.any().parse(response);
+
+    const item = anyResponse[0];
+
+    expect(item).toMatchObject({
+      qid: expect.any(Number),
+    });
+
+    // Store question ID for later use
+    createdQuestionIds.push(item.qid.toString());
+  });
+});
+
+describe('deleteFormQuestion()', () => {
+  let createdQuestionId: string;
+
+  beforeAll(async () => {
+    const response = await jotform.addFormQuestion(TEST_FORM_ID, {
+      question: {
+        type: 'control_head',
+      },
+    });
+
+    const anyResponse = z.any().parse(response);
+
+    createdQuestionId = anyResponse.qid.toString();
+  });
+
+  it('deletes form question properly', async () => {
+    const response = await jotform.deleteFormQuestion(TEST_FORM_ID, createdQuestionId);
+
+    expect(response).toBe(`QuestionID #${createdQuestionId} successfully deleted.`);
+  });
+});
 
 /**
  * Form reports
