@@ -576,6 +576,7 @@ __metadata:
     "@wojtekmaj/async-array-utils": "npm:^1.8.0"
     husky: "npm:^9.0.0"
     object-to-formdata: "npm:^4.5.1"
+    p-throttle: "npm:^7.0.0"
     rimraf: "npm:^6.0.0"
     typescript: "npm:^5.5.2"
     vitest: "npm:^3.0.5"
@@ -1320,6 +1321,13 @@ __metadata:
   version: 7.0.3
   resolution: "p-map@npm:7.0.3"
   checksum: 10c0/46091610da2b38ce47bcd1d8b4835a6fa4e832848a6682cf1652bc93915770f4617afc844c10a77d1b3e56d2472bb2d5622353fa3ead01a7f42b04fc8e744a5c
+  languageName: node
+  linkType: hard
+
+"p-throttle@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "p-throttle@npm:7.0.0"
+  checksum: 10c0/7a9ca80826808b3d7f946369fc17a0ba020064c1bda9a5dfa74d2c9713f896576cdc4872bd61091ef2950d6a84072cac672bb1eb88a8b6a0c9e348d030623fc1
   languageName: node
   linkType: hard
 

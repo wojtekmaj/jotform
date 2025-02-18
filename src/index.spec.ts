@@ -1,6 +1,7 @@
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { asyncForEach } from '@wojtekmaj/async-array-utils';
 import { z } from 'zod';
+import pThrottle from 'p-throttle';
 
 import * as jotform from './index.js';
 
@@ -15,6 +16,11 @@ const TEST_FOLDER_ID = '64cba4746334320c7c37f6b1';
 const TEST_SUBFOLDER_ID = '64cba47f366166d6c6b373a8';
 
 const TEST_REPORT_ID = '232152641243042';
+
+// Throttle fetch API calls to avoid rate limiting
+const throttle = pThrottle({ limit: 1, interval: 1000 });
+
+vi.stubGlobal('fetch', throttle(fetch));
 
 describe('index', () => {
   it('has options exported properly', () => {
