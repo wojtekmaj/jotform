@@ -1,4 +1,5 @@
 import { serialize } from 'object-to-formdata';
+import type { Form } from './types.js';
 
 type Options = {
   /**
@@ -420,9 +421,9 @@ type GetFormsQuery = {
  * @link https://api.jotform.com/docs/#user-forms
  * @param {GetFormsQuery} [query]
  * @param {HeadersInit} [customHeaders]
- * @returns {Promise<unknown>}
+ * @returns {Promise<Form[]>}
  */
-export function getForms(query: GetFormsQuery = {}, customHeaders?: HeadersInit): Promise<unknown> {
+export function getForms(query: GetFormsQuery = {}, customHeaders?: HeadersInit): Promise<Form[]> {
   const { filter, offset, limit, orderby, direction, fullText } = query;
 
   if (filter && typeof filter !== 'object') {
@@ -443,7 +444,7 @@ export function getForms(query: GetFormsQuery = {}, customHeaders?: HeadersInit)
     direction,
   });
 
-  const promise = get(requestUrl, customHeaders);
+  const promise = get<Form[]>(requestUrl, customHeaders);
   return promise;
 }
 
