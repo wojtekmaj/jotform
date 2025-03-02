@@ -1,5 +1,5 @@
 import { serialize } from 'object-to-formdata';
-import type { Form } from './types.js';
+import type { Form, UserSettings } from './types.js';
 
 type Options = {
   /**
@@ -277,13 +277,13 @@ export function getHistory(
  * @description Get user's time zone and language.
  * @link https://api.jotform.com/docs/#user-settings
  * @param {HeadersInit} [customHeaders]
- * @returns {Promise<unknown>}
+ * @returns {Promise<UserSettings>}
  */
-export function getSettings(customHeaders?: HeadersInit): Promise<unknown> {
+export function getSettings(customHeaders?: HeadersInit): Promise<UserSettings> {
   const endPoint = '/user/settings';
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl, customHeaders);
+  const promise = get<UserSettings>(requestUrl, customHeaders);
   return promise;
 }
 
@@ -455,9 +455,9 @@ export function getForms(query: GetFormsQuery = {}, customHeaders?: HeadersInit)
  * @link https://api.jotform.com/docs/#form-id
  * @param {string} formID
  * @param {HeadersInit} [customHeaders]
- * @returns {Promise<unknown>}
+ * @returns {Promise<Form>}
  */
-export function getForm(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
+export function getForm(formID: string, customHeaders?: HeadersInit): Promise<Form> {
   if (typeof formID === 'undefined' || formID === null) {
     throw new Error('formID is required');
   }
@@ -465,7 +465,7 @@ export function getForm(formID: string, customHeaders?: HeadersInit): Promise<un
   const endPoint = `/form/${formID}`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl, customHeaders);
+  const promise = get<Form>(requestUrl, customHeaders);
   return promise;
 }
 

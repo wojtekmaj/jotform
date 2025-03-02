@@ -112,10 +112,14 @@ describe('getForms()', () => {
 
     expect(response).toMatchObject(expect.any(Array));
 
-    const parsedResponse = z.array(z.object({
-      id: z.string(),
-      status: z.enum(["ENABLED"])
-    })).parse(response);
+    const parsedResponse = z
+      .array(
+        z.object({
+          id: z.string(),
+          status: z.enum(['ENABLED']),
+        }),
+      )
+      .parse(response);
 
     const testForm = parsedResponse.find((form: { id: string }) => form.id === TEST_FORM_ID);
 
