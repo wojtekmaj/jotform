@@ -1,5 +1,5 @@
 import { serialize } from 'object-to-formdata';
-import type { Form, UserSettings } from './types.js';
+import type { Form, Plan, PlanName, Submission, UpdateUserSettings, User, UserSettings, UserUsage } from './types.js';
 
 type Options = {
   /**
@@ -297,7 +297,7 @@ export function getSettings(customHeaders?: HeadersInit): Promise<UserSettings> 
  * @returns {Promise<unknown>}
  */
 export function updateSettings(
-  settingsData: unknown,
+  settingsData: UpdateUserSettings,
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
   if (typeof settingsData !== 'object' || settingsData === null) {
@@ -334,13 +334,13 @@ export function getSubusers(customHeaders?: HeadersInit): Promise<unknown> {
  * @description Get number of form submissions received this month. Also, get number of SSL form submissions, payment form submissions and upload space used by user.
  * @link https://api.jotform.com/docs/#user-usage
  * @param {HeadersInit} [customHeaders]
- * @returns {Promise<unknown>}
+ * @returns {Promise<UserUsage>}
  */
-export function getUsage(customHeaders?: HeadersInit): Promise<unknown> {
+export function getUsage(customHeaders?: HeadersInit): Promise<UserUsage> {
   const endPoint = '/user/usage';
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl, customHeaders);
+  const promise = get<UserUsage>(requestUrl, customHeaders);
   return promise;
 }
 
@@ -350,13 +350,13 @@ export function getUsage(customHeaders?: HeadersInit): Promise<unknown> {
  * @description Get user account details for this Jotform user. Including user account type, avatar URL, name, email, website URL.
  * @link https://api.jotform.com/docs/#user
  * @param {HeadersInit} [customHeaders]
- * @returns {Promise<unknown>}
+ * @returns {Promise<User>}
  */
-export function getUser(customHeaders?: HeadersInit): Promise<unknown> {
+export function getUser(customHeaders?: HeadersInit): Promise<User> {
   const endPoint = '/user';
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl, customHeaders);
+  const promise = get<User>(requestUrl, customHeaders);
   return promise;
 }
 
@@ -364,9 +364,9 @@ export function getUser(customHeaders?: HeadersInit): Promise<unknown> {
  * Get details of a plan
  *
  * @description Get limit and prices of a plan.
- * @param {string} planName
+ * @param {PlanName} planName
  */
-export function getPlan(planName: string, customHeaders?: HeadersInit): Promise<unknown> {
+export function getPlan(planName: string, customHeaders?: HeadersInit): Promise<Plan> {
   if (planName === undefined) {
     throw new Error('Plan name is undefined');
   }
@@ -374,7 +374,7 @@ export function getPlan(planName: string, customHeaders?: HeadersInit): Promise<
   const endPoint = `/system/plan/${planName}`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl, customHeaders);
+  const promise = get<Plan>(requestUrl, customHeaders);
   return promise;
 }
 
@@ -976,13 +976,13 @@ type GetFormSubmissionsQuery = {
  * @param {string} formID
  * @param {GetFormSubmissionsQuery} [query]
  * @param {HeadersInit} [customHeaders]
- * @returns {Promise<unknown>}
+ * @returns {Promise<Submission[]>}
  */
 export function getFormSubmissions(
   formID: string,
   query: GetFormSubmissionsQuery = {},
   customHeaders?: HeadersInit,
-): Promise<unknown> {
+): Promise<Submission[]> {
   if (typeof formID === 'undefined' || formID === null) {
     throw new Error('formID is required');
   }
@@ -1006,7 +1006,7 @@ export function getFormSubmissions(
     direction,
   });
 
-  const promise = get(requestUrl, customHeaders);
+  const promise = get<Submission[]>(requestUrl, customHeaders);
   return promise;
 }
 
