@@ -4,21 +4,21 @@ enum UserStatus {
   SUSPENDED = 'SUSPENDED',
 }
 enum Industry {
-  Education='Education',
-  WebDesign='Web Design',
-  Religious='Religious',
-  NonProfit='Non-Profit',
-  EventOrganizer='Event Organizer',
-  Marketing='Marketing',
-  WebDevelopment='Web Development',
-  Consultancy='Consultancy',
-  Photography='Photography',
-  SocialMedia='Social Media',
-  SmallBusiness='Small Business',
-  Sports='Sports',
-  RealEstate='Real Estate',
-  HumanResources='Human Resources',
-  Other='Other'
+  Education = 'Education',
+  WebDesign = 'Web Design',
+  Religious = 'Religious',
+  NonProfit = 'Non-Profit',
+  EventOrganizer = 'Event Organizer',
+  Marketing = 'Marketing',
+  WebDevelopment = 'Web Development',
+  Consultancy = 'Consultancy',
+  Photography = 'Photography',
+  SocialMedia = 'Social Media',
+  SmallBusiness = 'Small Business',
+  Sports = 'Sports',
+  RealEstate = 'Real Estate',
+  HumanResources = 'Human Resources',
+  Other = 'Other',
 }
 type BasicUser = {
   username: string;
@@ -43,7 +43,7 @@ type BasicUser = {
   avatarUrl: string;
   is2FAEnabled: boolean;
   disableViewLimits: boolean;
-}
+};
 export type User = BasicUser & {
   allowBoards: boolean;
   allowDigest: boolean;
@@ -62,7 +62,7 @@ export type User = BasicUser & {
   allowAIAgentFormFiller: boolean;
   allowPaymentReusableForEnterprise: boolean;
   isNewSMTPFlowEnabled: boolean;
-}
+};
 export type UserSettings = BasicUser;
 export type UpdateUserSettings = {
   name?: string;
@@ -73,20 +73,20 @@ export type UpdateUserSettings = {
   securityQuestion?: string;
   securityAnswer?: string;
   industry?: Industry;
-}
+};
 export type UserUsage = {
   username: string;
- submissions: string;
- ssl_submissions: string;
- payments: string;
- uploads: string;
- mobile_submissions: string;
- views: string;
- api: number;
-}
+  submissions: string;
+  ssl_submissions: string;
+  payments: string;
+  uploads: string;
+  mobile_submissions: string;
+  views: string;
+  api: number;
+};
 
 // Form
-enum FormStatus {
+export enum FormStatus {
   ENABLED = 'ENABLED',
   DISABLED = 'DISABLED',
   DELETED = 'DELETED',
@@ -94,6 +94,37 @@ enum FormStatus {
 enum FormType {
   LEGACY = 'LEGACY',
   CARD = 'CARD',
+}
+type FormEmail = {
+  body: string;
+  dirty: string;
+  from: string;
+  hideEmptyFields: "0" | '1';
+  html: "0" | '1';
+  lastQuestionID: string;
+  name: string;
+  pdfattachment: string;
+  replyTo: string;
+  "sendOnEdit": '0' | "1";
+  subject: string;
+  to: string;
+  type: string;
+  uploadAttachment: string;
+  uniqueID: string;
+}
+type FormString = {
+  [key: string]: string;
+}
+type Language = {
+  "detectUserLanguage": '0' | '1';
+  "firstPageOnly": '0' | '1';
+  options: string;
+  originalLanguage: string;
+  primaryLanguage: string;
+  "saveUserLanguage": '0' | '1';
+  showStatus: string;
+  theme: string;
+  version: string;
 }
 export type Form = {
   id: string;
@@ -111,11 +142,25 @@ export type Form = {
   archived: '0' | '1';
   url: string;
 };
+export type FormProperties = Form & {
+  pagetitle: string;
+  pagetitleChanged: string;
+  emails: FormEmail[];
+  formStrings: FormString[];
+  languages: Language[];
+}
+export type Question = {
+  order: string;
+  qid: string;
+  text: string;
+  name: string;
+  type: string;
+}
 
 // Submission
 export enum SubmissionStatus {
-  ACTIVE="ACTIVE",
-  OVERQUOTA="OVERQUOTA"
+  ACTIVE = 'ACTIVE',
+  OVERQUOTA = 'OVERQUOTA',
 }
 type Answer = {
   name: string;
@@ -128,9 +173,8 @@ type Answer = {
       prettyFormat?: string;
     }
   | {
-      answer: string;
+      answer?: string;
     }
-  | {}
 );
 export type Submission = {
   id: string;
@@ -139,51 +183,51 @@ export type Submission = {
   created_at: string;
   updated_at: string;
   status: SubmissionStatus;
-  new: "0" | "1";
-  flag: "0" | "1";
+  new: '0' | '1';
+  flag: '0' | '1';
   notes: string;
   answers: {
     [answer: string]: Answer;
   };
   workflowStatus?: string;
-}
+};
 
 // System
 export enum PlanName {
-  FREE='FREE',
-  BRONZE='BRONZE',
-  SILVER='SILVER',
-  GOLD='GOLD',
-  PLATINUM='PLATINUM'
+  FREE = 'FREE',
+  BRONZE = 'BRONZE',
+  SILVER = 'SILVER',
+  GOLD = 'GOLD',
+  PLATINUM = 'PLATINUM',
 }
 export type Plan = {
   name: PlanName;
   limits: {
-      submissions: number;
-      overSubmissions: number;
-      sslSubmissions: number;
-      payments: number;
-      uploads: number;
-      tickets: number;
-      subusers: number;
-      api: number;
-      views: number;
-      formCount: number;
-      "hipaaCompliance": boolean;
-  }
-  "prices": {
-      "monthly": number;
-      "yearly": number;
-      "biyearly": number;
-    },
-    "plimusIDs": {
-      "monthly": number;
-      "yearly": number;
-      "biyearly": number;
-    },
-    "fastSpringURLs": {
-      "monthly": string;
-      "yearly": string;
-      "biyearly": string;
-    },
-}
+    submissions: number;
+    overSubmissions: number;
+    sslSubmissions: number;
+    payments: number;
+    uploads: number;
+    tickets: number;
+    subusers: number;
+    api: number;
+    views: number;
+    formCount: number;
+    hipaaCompliance: boolean;
+  };
+  prices: {
+    monthly: number;
+    yearly: number;
+    biyearly: number;
+  };
+  plimusIDs: {
+    monthly: number;
+    yearly: number;
+    biyearly: number;
+  };
+  fastSpringURLs: {
+    monthly: string;
+    yearly: string;
+    biyearly: string;
+  };
+};

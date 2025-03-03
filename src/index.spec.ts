@@ -4,7 +4,7 @@ import { z } from 'zod';
 import pThrottle from 'p-throttle';
 
 import * as jotform from './index.js';
-import { SubmissionStatus } from './types.js';
+import { FormStatus, PlanName, SubmissionStatus } from './types.js';
 
 const TEST_FORM_ID = '232143945675058';
 
@@ -95,10 +95,10 @@ describe('getUser()', () => {
 
 describe('getPlan()', () => {
   it('returns plan data properly', async () => {
-    const response = await jotform.getPlan('FREE');
+    const response = await jotform.getPlan(PlanName.FREE);
 
     expect(response).toMatchObject({
-      name: 'FREE',
+      name: PlanName.FREE,
     });
   });
 });
@@ -109,7 +109,7 @@ describe('getPlan()', () => {
 
 describe('getForms()', () => {
   it('returns forms data properly', async () => {
-    const response = await jotform.getForms({ filter: { status: 'ENABLED' } });
+    const response = await jotform.getForms({ filter: { status: FormStatus.ENABLED } });
 
     expect(response).toMatchObject(expect.any(Array));
 
@@ -117,7 +117,7 @@ describe('getForms()', () => {
       .array(
         z.object({
           id: z.string(),
-          status: z.enum(['ENABLED']),
+          status: z.enum([FormStatus.ENABLED]),
         }),
       )
       .parse(response);
@@ -851,8 +851,8 @@ describe('getSubmissions()', () => {
         }),
       )
       .parse(response);
-    
-      const testFormSubmission = parsedResponse.find(
+
+    const testFormSubmission = parsedResponse.find(
       (submission) => submission.id === TEST_FORM_SUBMISSION_ID,
     );
 
