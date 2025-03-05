@@ -99,33 +99,33 @@ type FormEmail = {
   body: string;
   dirty: string;
   from: string;
-  hideEmptyFields: "0" | '1';
-  html: "0" | '1';
+  hideEmptyFields: '0' | '1';
+  html: '0' | '1';
   lastQuestionID: string;
   name: string;
   pdfattachment: string;
   replyTo: string;
-  "sendOnEdit": '0' | "1";
+  sendOnEdit: '0' | '1';
   subject: string;
   to: string;
   type: string;
   uploadAttachment: string;
   uniqueID: string;
-}
+};
 type FormString = {
   [key: string]: string;
-}
+};
 type Language = {
-  "detectUserLanguage": '0' | '1';
-  "firstPageOnly": '0' | '1';
+  detectUserLanguage: '0' | '1';
+  firstPageOnly: '0' | '1';
   options: string;
   originalLanguage: string;
   primaryLanguage: string;
-  "saveUserLanguage": '0' | '1';
+  saveUserLanguage: '0' | '1';
   showStatus: string;
   theme: string;
   version: string;
-}
+};
 export type Form = {
   id: string;
   username: string;
@@ -148,14 +148,46 @@ export type FormProperties = Form & {
   emails: FormEmail[];
   formStrings: FormString[];
   languages: Language[];
-}
+};
 export type Question = {
   order: string;
   qid: string;
   text: string;
   name: string;
   type: string;
+};
+enum ListType {
+  excel = 'excel',
+  csv = 'csv',
+  grid = 'grid',
+  table = 'table',
+  calendar = 'calendar',
+  rss = 'rss',
+  visual = 'visual',
 }
+export type FormReport = {
+  id: string;
+  form_id: string;
+  title: string;
+  created_at: string;
+  updated_at: string | null;
+  url: string;
+  isProtected: boolean;
+  fields?: string;
+  list_type?: ListType;
+  status: 'ENABLED' | 'DELETED';
+  settings?: string;
+};
+export type FormFile = {
+  name: string;
+  type: string;
+  size: string;
+  username: string;
+  form_id: string;
+  submission_id: string;
+  date: string;
+  url: string;
+};
 
 // Submission
 export enum SubmissionStatus {

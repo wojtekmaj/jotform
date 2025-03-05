@@ -1,7 +1,9 @@
 import { serialize } from 'object-to-formdata';
 import type {
   Form,
+  FormFile,
   FormProperties,
+  FormReport,
   Plan,
   PlanName,
   Question,
@@ -577,9 +579,9 @@ export function cloneForm(formID: string, customHeaders?: HeadersInit): Promise<
  * @link https://api.jotform.com/docs/#form-id-files
  * @param {string} formID
  * @param {HeadersInit} [customHeaders]
- * @returns {Promise<unknown>}
+ * @returns {Promise<FormFile[]>}
  */
-export function getFormFiles(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
+export function getFormFiles(formID: string, customHeaders?: HeadersInit): Promise<FormFile[]> {
   if (typeof formID === 'undefined' || formID === null) {
     throw new Error('formID is required');
   }
@@ -587,7 +589,7 @@ export function getFormFiles(formID: string, customHeaders?: HeadersInit): Promi
   const endPoint = `/form/${formID}/files`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl, customHeaders);
+  const promise = get<FormFile[]>(requestUrl, customHeaders);
   return promise;
 }
 
@@ -604,7 +606,10 @@ export function getFormFiles(formID: string, customHeaders?: HeadersInit): Promi
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<FormProperties>}
  */
-export function getFormProperties(formID: string, customHeaders?: HeadersInit): Promise<FormProperties> {
+export function getFormProperties(
+  formID: string,
+  customHeaders?: HeadersInit,
+): Promise<FormProperties> {
   if (typeof formID === 'undefined' || formID === null) {
     throw new Error('formID is required');
   }
@@ -717,7 +722,10 @@ export function addFormProperties(
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<{[question: string]: Question}>}
  */
-export function getFormQuestions(formID: string, customHeaders?: HeadersInit): Promise<{[question: string]: Question}> {
+export function getFormQuestions(
+  formID: string,
+  customHeaders?: HeadersInit,
+): Promise<{ [question: string]: Question }> {
   if (typeof formID === 'undefined' || formID === null) {
     throw new Error('formID is required');
   }
@@ -725,7 +733,7 @@ export function getFormQuestions(formID: string, customHeaders?: HeadersInit): P
   const endPoint = `/form/${formID}/questions`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get<{[question: string]: Question}>(requestUrl, customHeaders);
+  const promise = get<{ [question: string]: Question }>(requestUrl, customHeaders);
   return promise;
 }
 
@@ -835,7 +843,7 @@ export function deleteFormQuestion(
   formID: string,
   questionID: string,
   customHeaders?: HeadersInit,
-): Promise<unknown> {
+): Promise<string> {
   if (typeof formID === 'undefined' || formID === null) {
     throw new Error('formID is required');
   }
@@ -847,7 +855,7 @@ export function deleteFormQuestion(
   const endPoint = `/form/${formID}/question/${questionID}`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = del(requestUrl, customHeaders);
+  const promise = del<string>(requestUrl, customHeaders);
   return promise;
 }
 
@@ -862,9 +870,9 @@ export function deleteFormQuestion(
  * @link https://api.jotform.com/docs/#form-id-reports
  * @param {string} formID
  * @param {HeadersInit} [customHeaders]
- * @returns {Promise<unknown>}
+ * @returns {Promise<FormReport[]>}
  */
-export function getFormReports(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
+export function getFormReports(formID: string, customHeaders?: HeadersInit): Promise<FormReport[]> {
   if (typeof formID === 'undefined' || formID === null) {
     throw new Error('formID is required');
   }
@@ -872,7 +880,7 @@ export function getFormReports(formID: string, customHeaders?: HeadersInit): Pro
   const endPoint = `/form/${formID}/reports`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl, customHeaders);
+  const promise = get<FormReport[]>(requestUrl, customHeaders);
   return promise;
 }
 
