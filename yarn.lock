@@ -560,10 +560,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wojtekmaj/async-array-utils@npm:^1.8.0":
-  version: 1.8.0
-  resolution: "@wojtekmaj/async-array-utils@npm:1.8.0"
-  checksum: 10c0/91f11922c06c6e6afc3ab75f8103a2bc6b24d4bdc8e7ec5bcd51896c01fe26610cb499c4911446f5e0a51631d6fa7e079a16f9c1a01db49ac2ad102c9fede2e3
+"@wojtekmaj/async-array-utils@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@wojtekmaj/async-array-utils@npm:2.0.0"
+  checksum: 10c0/be0302ce69cdb98893edf7cec8e5e198aef1fa709758111d86d9ec133ba338d474998811bb90861e9ba6ffb9858f24ab8bd7b4d4be050d0793ed593e613c5af0
   languageName: node
   linkType: hard
 
@@ -573,7 +573,7 @@ __metadata:
   dependencies:
     "@biomejs/biome": "npm:1.9.0"
     "@types/node": "npm:*"
-    "@wojtekmaj/async-array-utils": "npm:^1.8.0"
+    "@wojtekmaj/async-array-utils": "npm:^2.0.0"
     husky: "npm:^9.0.0"
     object-to-formdata: "npm:^4.5.1"
     p-throttle: "npm:^7.0.0"
