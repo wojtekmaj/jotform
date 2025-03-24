@@ -7,7 +7,7 @@ Unofficial [Jotform API](https://api.jotform.com/docs/) Node.js Client with Type
 ## tl;dr
 
 - Install by executing `npm install @wojtekmaj/jotform` or `yarn add @wojtekmaj/jotform`.
-- Import by adding `import jotform from '@wojtekmaj/jotform'`.
+- Import by adding `import * as jotform from '@wojtekmaj/jotform'`.
 - Authenticate:
   ```ts
   jotform.options({
@@ -40,7 +40,7 @@ To obtain Jotform API key, go to [API section](https://www.jotform.com/myaccount
 Here's an example of basic usage:
 
 ```ts
-import jotform from '@wojtekmaj/jotform';
+import * as jotform from '@wojtekmaj/jotform';
 
 jotform.options({
   apiKey: 'YOUR_API_KEY',
