@@ -372,6 +372,41 @@ describe('addFormQuestions()', () => {
   });
 });
 
+describe('updateFormQuestion()', () => {
+  let createdQuestionId: string;
+
+  beforeAll(async () => {
+    const response = await jotform.addFormQuestion(TEST_FORM_ID, {
+      question: {
+        type: 'control_textbox',
+        text: 'Test question',
+      },
+    });
+
+    const anyResponse = z.any().parse(response);
+
+    createdQuestionId = anyResponse.qid.toString();
+  });
+
+  it('updates form question properly', async () => {
+    const response = await jotform.updateFormQuestion(TEST_FORM_ID, createdQuestionId, {
+      question: {
+        hidden: 'Yes',
+      },
+    });
+
+    expect(response).toMatchObject(expect.any(Array));
+
+    const anyResponse = z.any().parse(response);
+
+    const item = anyResponse[0];
+
+    expect(item).toMatchObject({
+      hidden: 'Yes',
+    });
+  });
+});
+
 describe('deleteFormQuestion()', () => {
   let createdQuestionId: string;
 
