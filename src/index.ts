@@ -810,6 +810,43 @@ export function addFormQuestions(
 }
 
 /**
+ * Add or edit a single question properties
+ *
+ * @description Edit a question property or add a new one. Form questions might have various properties. Examples: Is it required? Are there any validations such as 'numeric only'?
+ * @link https://api.jotform.com/docs/#post-form-id-question-id
+ * @param {string} formID
+ * @param {string} questionID
+ * @param {unknown} questionData
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
+export function updateFormQuestion(
+  formID: string,
+  questionID: string,
+  questionData: unknown,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
+  if (typeof formID === 'undefined' || formID === null) {
+    throw new Error('formID is required');
+  }
+
+  if (typeof questionID === 'undefined' || questionID === null) {
+    throw new Error('questionID is required');
+  }
+
+  if (typeof questionData !== 'object' || questionData === null) {
+    throw new Error('questionData must be an object');
+  }
+
+  const endPoint = `/form/${formID}/question/${questionID}`;
+  const requestUrl = getRequestUrl(endPoint);
+  const postData = questionData;
+
+  const promise = post(requestUrl, postData, customHeaders);
+  return promise;
+}
+
+/**
  * Delete Form Question
  *
  * @description Delete a single form question.
