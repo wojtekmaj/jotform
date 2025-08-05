@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { asyncForEach } from '@wojtekmaj/async-array-utils';
-import { z } from 'zod';
 import pThrottle from 'p-throttle';
+import { z } from 'zod';
 
 import * as jotform from './index.js';
 
