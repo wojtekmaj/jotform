@@ -117,8 +117,8 @@ Here's how the two packages compare:
 | Tests                  | ❌                 | ✅               | ✅                   |
 | Methods available      | 36                 | 45               | 59                   |
 | Number of dependencies | 2                  | 2                | 1                    |
-| Bundle size            | 38.3 kB (min+gzip) | 13 kB (min+gzip) | 3.5 kB (min+gzip)    |
-| Install size           | 2.35 MB            | 2.33 MB          | 236 kB               |
+| Bundle size            | 42.6 kB (min+gzip) | 28.1 kB (min+gzip) | 3.39 kB (min+gzip)    |
+| Install size           | 2.35 MB            | 2.33 MB          | 189 kB               |
 
 ## License
 
