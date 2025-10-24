@@ -1233,6 +1233,255 @@ export function deleteFormWebhook(
 }
 
 /**
+ * Labels
+ */
+
+type LabelResource = {
+  id: string;
+  type: string;
+};
+
+type GetLabelResourcesQuery = {
+  offset?: number;
+  limit?: number;
+  orderby?: string;
+  direction?: 'ASC' | 'DESC';
+  status?: string;
+  type?: string;
+};
+
+/**
+ * Get User Labels
+ *
+ * @description Get all labels in a user’s account, with optional support for including related resources via parameter.
+ * @link https://api.jotform.com/docs/#get-user-labels
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
+export function getLabels(customHeaders?: HeadersInit): Promise<unknown> {
+  const endPoint = '/user/labels';
+  const requestUrl = getRequestUrl(endPoint);
+
+  const promise = get(requestUrl, customHeaders);
+  return promise;
+}
+
+/**
+ * Get Label Details
+ *
+ * @description Get the details of a label, including its name and color.
+ * @link https://api.jotform.com/docs/#label-id
+ * @param {string} labelID
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
+export function getLabel(labelID: string, customHeaders?: HeadersInit): Promise<unknown> {
+  if (typeof labelID === 'undefined' || labelID === null) {
+    throw new Error('labelID is required');
+  }
+
+  const endPoint = `/label/${labelID}`;
+  const requestUrl = getRequestUrl(endPoint);
+
+  const promise = get(requestUrl, customHeaders);
+  return promise;
+}
+
+/**
+ * Create Label
+ *
+ * @description Create a label by defining attributes such as name and color.
+ * @link https://api.jotform.com/docs/#post-label
+ * @param {unknown} labelProperties
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
+export function createLabel(
+  labelProperties: unknown,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
+  if (typeof labelProperties !== 'object' || labelProperties === null) {
+    throw new Error('labelProperties must be an object');
+  }
+
+  const endPoint = '/label';
+  const requestUrl = getRequestUrl(endPoint);
+  const postData = labelProperties;
+
+  const promise = post(requestUrl, postData, customHeaders);
+  return promise;
+}
+
+/**
+ * Update Label
+ *
+ * @description Update an existing label with specified parameters, such as name and color.
+ * @link https://api.jotform.com/docs/#put-label-id
+ * @param {string} labelID
+ * @param {unknown} labelProperties
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
+export function updateLabel(
+  labelID: string,
+  labelProperties: unknown,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
+  if (typeof labelID === 'undefined' || labelID === null) {
+    throw new Error('labelID is required');
+  }
+
+  if (typeof labelProperties !== 'object' || labelProperties === null) {
+    throw new Error('labelProperties must be an object');
+  }
+
+  const endPoint = `/label/${labelID}`;
+  const requestUrl = getRequestUrl(endPoint);
+  const postData = labelProperties;
+
+  const promise = put(requestUrl, postData, customHeaders);
+  return promise;
+}
+
+/**
+ * Get Label Resources
+ *
+ * @description Get a list of assets in a label and their associated information.
+ * @link https://api.jotform.com/docs/#label-id-resources
+ * @param {string} labelID
+ * @param {GetLabelResourcesQuery} [query]
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
+export function getLabelResources(
+  labelID: string,
+  query: GetLabelResourcesQuery = {},
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
+  if (typeof labelID === 'undefined' || labelID === null) {
+    throw new Error('labelID is required');
+  }
+
+  const { offset, limit, orderby, direction, status, type } = query;
+
+  const endPoint = `/label/${labelID}/resources`;
+  const requestUrl = getRequestUrl(endPoint, {
+    offset,
+    limit,
+    orderby,
+    direction,
+    status,
+    type,
+  });
+
+  const promise = get(requestUrl, customHeaders);
+  return promise;
+}
+
+function ensureLabelResource(resource: LabelResource): asserts resource is LabelResource {
+  if (typeof resource !== 'object' || resource === null) {
+    throw new Error('resource must be an object');
+  }
+
+  if (typeof resource.id !== 'string' || resource.id.length === 0) {
+    throw new Error('resource.id must be a non-empty string');
+  }
+
+  if (typeof resource.type !== 'string' || resource.type.length === 0) {
+    throw new Error('resource.type must be a non-empty string');
+  }
+}
+
+/**
+ * Add Resources to Label
+ *
+ * @description Add the specified asset, identified by its ID and type, into a label.
+ * @link https://api.jotform.com/docs/#put-label-id-add-resources
+ * @param {string} labelID
+ * @param {LabelResource} resource
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
+export function addResourcesToLabel(
+  labelID: string,
+  resource: LabelResource,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
+  if (typeof labelID === 'undefined' || labelID === null) {
+    throw new Error('labelID is required');
+  }
+
+  ensureLabelResource(resource);
+
+  const endPoint = `/label/${labelID}/add-resources`;
+  const requestUrl = getRequestUrl(endPoint);
+  const postData = {
+    resources: [resource],
+  };
+
+  const promise = put(requestUrl, postData, customHeaders);
+  return promise;
+}
+
+/**
+ * Remove Resources from Label
+ *
+ * @description Remove the specified assets, identified by their IDs and types, from a label.
+ * @link https://api.jotform.com/docs/#put-label-id-remove-resources
+ * @param {string} labelID
+ * @param {LabelResource[]} resources
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
+export function removeResourcesFromLabel(
+  labelID: string,
+  resources: LabelResource[],
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
+  if (typeof labelID === 'undefined' || labelID === null) {
+    throw new Error('labelID is required');
+  }
+
+  if (!Array.isArray(resources) || resources.length === 0) {
+    throw new Error('resources must be a non-empty array');
+  }
+
+  for (const resource of resources) {
+    ensureLabelResource(resource);
+  }
+
+  const endPoint = `/label/${labelID}/remove-resources`;
+  const requestUrl = getRequestUrl(endPoint);
+  const postData = {
+    resources,
+  };
+
+  const promise = put(requestUrl, postData, customHeaders);
+  return promise;
+}
+
+/**
+ * Delete Label
+ *
+ * @description Delete a label along with all its sublabels.
+ * @link https://api.jotform.com/docs/#delete-label-id
+ * @param {string} labelID
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
+export function deleteLabel(labelID: string, customHeaders?: HeadersInit): Promise<unknown> {
+  if (typeof labelID === 'undefined' || labelID === null) {
+    throw new Error('labelID is required');
+  }
+
+  const endPoint = `/label/${labelID}`;
+  const requestUrl = getRequestUrl(endPoint);
+
+  const promise = del(requestUrl, customHeaders);
+  return promise;
+}
+
+/**
  * Folders
  */
 

@@ -11,9 +11,14 @@ const TEST_FORM_SUBMISSION_ID = '5747651132391058779';
 
 const TEST_FORM_QUESTION_ID = '1';
 
+const TEST_ROOT_LABEL_ID = '0198c14737e87f33877e374156563c7be95a';
+const TEST_LABEL_ID = '019a15aba90c7fc2a2f9b95959c72c8345cc';
+const TEST_SUBLABEL_ID = '019a15b168537cd0bec4853947b190efb857';
+
 const TEST_ROOT_FOLDER_ID = '64cba4746334320c7cd86aa0';
 const TEST_FOLDER_ID = '64cba4746334320c7c37f6b1';
 const TEST_SUBFOLDER_ID = '64cba47f366166d6c6b373a8';
+
 
 const TEST_REPORT_ID = '232152641243042';
 
@@ -680,6 +685,246 @@ describe('deleteFormWebhook()', () => {
     const response = await jotform.deleteFormWebhook(TEST_FORM_ID, createdWebhookId);
 
     expect(response).toMatchObject({});
+  });
+});
+
+/**
+ * Labels
+ */
+
+describe('getLabels()', () => {
+  it('returns labels data properly', async () => {
+    const response = await jotform.getLabels();
+
+    expect(response).toMatchObject({
+      id: TEST_ROOT_LABEL_ID,
+      sublabels: expect.any(Array),
+    });
+
+    const anyResponse = z.any().parse(response);
+
+    const testLabel = anyResponse.sublabels.find(
+      (label: { id: string }) => label.id === TEST_LABEL_ID,
+    );
+
+    expect(testLabel).toBeDefined();
+
+    expect(testLabel).toEqual(
+      expect.objectContaining({
+        id: TEST_LABEL_ID,
+        sublabels: expect.any(Array),
+      }),
+    );
+
+    const testSublabel = testLabel.sublabels.find(
+      (sublabel: { id: string }) => sublabel.id === TEST_SUBLABEL_ID,
+    );
+
+    expect(testSublabel).toBeDefined();
+
+    expect(testSublabel).toEqual(
+      expect.objectContaining({
+        id: TEST_SUBLABEL_ID,
+        sublabels: expect.any(Array),
+      }),
+    );
+  });
+});
+
+describe('getLabel()', () => {
+  let createdLabelId: string;
+
+  beforeAll(async () => {
+    const response = await jotform.createLabel({ name: 'Test label', color: '#FFFFFF' });
+
+    const anyResponse = z.any().parse(response);
+
+    createdLabelId = anyResponse.id;
+  });
+
+  afterAll(async () => {
+    await jotform.deleteLabel(createdLabelId);
+  });
+
+  it('returns label data properly', async () => {
+    const response = await jotform.getLabel(createdLabelId);
+
+    expect(response).toMatchObject({
+      id: createdLabelId,
+      name: expect.any(String),
+    });
+  });
+});
+
+describe('createLabel()', () => {
+  const createdLabelIds: string[] = [];
+
+  afterAll(async () => {
+    await asyncForEach(createdLabelIds, async (labelId) => {
+      await jotform.deleteLabel(labelId);
+    });
+  });
+
+  it('creates label properly', async () => {
+    const response = await jotform.createLabel({ name: 'Another test label', color: '#DDDDDD' });
+
+    expect(response).toMatchObject({
+      id: expect.any(String),
+    });
+
+    const anyResponse = z.any().parse(response);
+
+    createdLabelIds.push(anyResponse.id);
+  });
+});
+
+describe('updateLabel()', () => {
+  let createdLabelId: string;
+
+  beforeAll(async () => {
+    const response = await jotform.createLabel({ name: 'Updatable label', color: '#ABCDEF' });
+
+    const anyResponse = z.any().parse(response);
+
+    createdLabelId = anyResponse.id;
+  });
+
+  afterAll(async () => {
+    await jotform.deleteLabel(createdLabelId);
+  });
+
+  it('updates label properly', async () => {
+    const response = await jotform.updateLabel(createdLabelId, {
+      name: 'Updated label',
+      color: '#123456',
+    });
+
+    expect(response).toMatchObject({
+      name: 'Updated label',
+      color: '#123456',
+    });
+  });
+});
+
+describe('getLabelResources()', () => {
+  let createdLabelId: string;
+
+  beforeAll(async () => {
+    const response = await jotform.createLabel({ name: 'Resources label', color: '#EEEEEE' });
+
+    const anyResponse = z.any().parse(response);
+
+    createdLabelId = anyResponse.id;
+  });
+
+  afterAll(async () => {
+    await jotform.deleteLabel(createdLabelId);
+  });
+
+  it('returns label resources properly', async () => {
+    const response = await jotform.getLabelResources(createdLabelId);
+
+    expect(response).toMatchObject(expect.any(Array));
+  });
+});
+
+describe('addResourcesToLabel()', () => {
+  const resource = {
+    id: TEST_FORM_ID,
+    type: 'form',
+  } as const;
+
+  let createdLabelId: string;
+
+  beforeAll(async () => {
+    const response = await jotform.createLabel({ name: 'Add resource label', color: '#C0FFEE' });
+
+    const anyResponse = z.any().parse(response);
+
+    createdLabelId = anyResponse.id;
+  });
+
+  afterAll(async () => {
+    await jotform.deleteLabel(createdLabelId);
+  });
+
+  it('adds resource to label properly', async () => {
+    const response = await jotform.addResourcesToLabel(createdLabelId, resource);
+
+    expect(response).toMatchObject(expect.any(Array));
+
+    const anyResponse = z.any().parse(response);
+
+    const item = anyResponse[0];
+
+    expect(item).toMatchObject({
+      id: resource.id,
+      type: expect.any(String),
+    });
+  });
+});
+
+describe('removeResourcesFromLabel()', () => {
+  const resource = {
+    id: TEST_FORM_ID,
+    type: 'form',
+  } as const;
+
+  let createdLabelId: string;
+
+  beforeAll(async () => {
+    const response = await jotform.createLabel({ name: 'Remove resource label', color: '#BADA55' });
+
+    const anyResponse = z.any().parse(response);
+
+    createdLabelId = anyResponse.id;
+
+    await jotform.addResourcesToLabel(createdLabelId, resource);
+  });
+
+  afterAll(async () => {
+    await jotform.deleteLabel(createdLabelId);
+  });
+
+  it('removes resources from label properly', async () => {
+    const response = await jotform.removeResourcesFromLabel(createdLabelId, [resource]);
+
+    expect(response).toMatchObject(expect.any(Array));
+
+    const anyResponse = z.any().parse(response);
+
+    const item = anyResponse[0];
+
+    expect(item).toMatchObject({
+      id: resource.id,
+      type: expect.any(String),
+    });
+  });
+});
+
+describe('deleteLabel()', () => {
+  let createdLabelId: string;
+
+  beforeAll(async () => {
+    const response = await jotform.createLabel({ name: 'Disposable label', color: '#654321' });
+
+    const anyResponse = z.any().parse(response);
+
+    createdLabelId = anyResponse.id;
+  });
+
+  afterAll(async () => {
+    if (createdLabelId) {
+      await jotform.deleteLabel(createdLabelId);
+    }
+  });
+
+  it('deletes label properly', async () => {
+    const response = await jotform.deleteLabel(createdLabelId);
+
+    expect(response).toBe(true);
+
+    createdLabelId = '';
   });
 });
 
