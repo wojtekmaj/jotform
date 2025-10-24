@@ -15,10 +15,7 @@ const TEST_ROOT_LABEL_ID = '0198c14737e87f33877e374156563c7be95a';
 const TEST_LABEL_ID = '019a15aba90c7fc2a2f9b95959c72c8345cc';
 const TEST_SUBLABEL_ID = '019a15b168537cd0bec4853947b190efb857';
 
-const TEST_ROOT_FOLDER_ID = '64cba4746334320c7cd86aa0';
 const TEST_FOLDER_ID = '64cba4746334320c7c37f6b1';
-const TEST_SUBFOLDER_ID = '64cba47f366166d6c6b373a8';
-
 
 const TEST_REPORT_ID = '232152641243042';
 
@@ -960,128 +957,63 @@ describe('deleteLabel()', () => {
  * Folders
  */
 
+const folderEndpointErrors = {
+  list: 'This endpoint is deprecated. Please refer to the Label feature endpoints. More information is available at: https://api.jotform.com/docs/#get-user-labels',
+  detail:
+    'This endpoint is deprecated. Please refer to the Label feature endpoints. More information is available at: https://api.jotform.com/docs/#get-label-id',
+  mutate:
+    'This endpoint is deprecated. Please refer to the Label feature endpoints. More information is available at: https://api.jotform.com/docs/#post-label',
+  delete:
+    'This endpoint is deprecated. Please refer to the Label feature endpoints. More information is available at: https://api.jotform.com/docs/#delete-label-id',
+} as const;
+
 describe('getFolders()', () => {
-  it('returns folders data properly', async () => {
-    const response = await jotform.getFolders();
-
-    expect(response).toMatchObject({
-      id: TEST_ROOT_FOLDER_ID,
-      // Not a mistake, actual discrepancy in API response
-      forms: expect.any(Object),
-      subfolders: expect.any(Array),
-    });
-
-    const anyResponse = z.any().parse(response);
-
-    const testFolder = anyResponse.subfolders.find(
-      (folder: { id: string }) => folder.id === TEST_FOLDER_ID,
-    );
-
-    expect(testFolder).toBeDefined();
-
-    expect(testFolder).toEqual(
-      expect.objectContaining({
-        id: TEST_FOLDER_ID,
-        forms: expect.any(Array),
-        subfolders: expect.any(Array),
-      }),
-    );
-
-    const testSubfolder = testFolder.subfolders.find(
-      (subfolder: { id: string }) => subfolder.id === TEST_SUBFOLDER_ID,
-    );
-
-    expect(testSubfolder).toBeDefined();
-
-    expect(testSubfolder).toEqual(
-      expect.objectContaining({
-        id: TEST_SUBFOLDER_ID,
-        forms: expect.any(Array),
-        subfolders: expect.any(Array),
-      }),
-    );
+  it('throws the deprecation error returned by the API', async () => {
+    await expect(jotform.getFolders()).rejects.toThrow(folderEndpointErrors.list);
   });
 });
 
 describe('getFolder()', () => {
-  it('returns folder data properly', async () => {
-    const response = await jotform.getFolder(TEST_FOLDER_ID);
-
-    expect(response).toMatchObject({
-      id: TEST_FOLDER_ID,
-      forms: expect.any(Object),
-    });
+  it('throws the deprecation error returned by the API', async () => {
+    await expect(jotform.getFolder(TEST_FOLDER_ID)).rejects.toThrow(folderEndpointErrors.detail);
   });
 });
 
 describe('createFolder()', () => {
-  const createdFolderIds: string[] = [];
-
-  afterAll(async () => {
-    await asyncForEach(createdFolderIds, async (folderId) => {
-      // This should be awaited, but this Promise never resolves
-      jotform.deleteFolder(folderId);
-    });
-  });
-
-  it('creates folder properly', async () => {
-    const response = await jotform.createFolder({ name: 'Test folder' });
-
-    expect(response).toMatchObject({
-      id: expect.any(String),
-    });
-
-    const anyResponse = z.any().parse(response);
-
-    // Store folder ID for later use
-    createdFolderIds.push(anyResponse.id);
+  it('throws the deprecation error returned by the API', async () => {
+    await expect(jotform.createFolder({ name: 'Test folder' })).rejects.toThrow(
+      folderEndpointErrors.mutate,
+    );
   });
 });
 
 describe('updateFolder()', () => {
-  let createdFolderId: string;
-
-  beforeAll(async () => {
-    const response = await jotform.createFolder({ name: 'Test folder' });
-
-    const anyResponse = z.any().parse(response);
-
-    createdFolderId = anyResponse.id;
-  });
-
-  afterAll(async () => {
-    // This should be awaited, but this Promise never resolves
-    jotform.deleteFolder(createdFolderId);
-  });
-
-  it('updates folder properly', async () => {
-    const response = await jotform.updateFolder(createdFolderId, { name: 'Test folder 2' });
-
-    expect(response).toMatchObject({
-      name: 'Test folder 2',
-    });
+  it('throws the deprecation error returned by the API', async () => {
+    await expect(jotform.updateFolder(TEST_FOLDER_ID, { name: 'Test folder 2' })).rejects.toThrow(
+      folderEndpointErrors.mutate,
+    );
   });
 });
 
-describe.todo('addFormToFolder()');
+describe('addFormToFolder()', () => {
+  it('throws the deprecation error returned by the API', async () => {
+    await expect(jotform.addFormToFolder(TEST_FOLDER_ID, TEST_FORM_ID)).rejects.toThrow(
+      folderEndpointErrors.mutate,
+    );
+  });
+});
 
-describe.todo('addFormsToFolder()');
+describe('addFormsToFolder()', () => {
+  it('throws the deprecation error returned by the API', async () => {
+    await expect(jotform.addFormsToFolder(TEST_FOLDER_ID, [TEST_FORM_ID])).rejects.toThrow(
+      folderEndpointErrors.mutate,
+    );
+  });
+});
 
 describe('deleteFolder()', () => {
-  let createdFolderId: string;
-
-  beforeAll(async () => {
-    const response = await jotform.createFolder({ name: 'Test folder' });
-
-    const anyResponse = z.any().parse(response);
-
-    createdFolderId = anyResponse.id;
-  });
-
-  it('deletes folder properly', async () => {
-    const response = await jotform.deleteFolder(createdFolderId);
-
-    expect(response).toBe('Folder deleted successfully');
+  it('throws the deprecation error returned by the API', async () => {
+    await expect(jotform.deleteFolder(TEST_FOLDER_ID)).rejects.toThrow(folderEndpointErrors.delete);
   });
 });
 

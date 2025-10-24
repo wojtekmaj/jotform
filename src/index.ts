@@ -1513,46 +1513,47 @@ export function deleteLabel(labelID: string, customHeaders?: HeadersInit): Promi
  * Folders
  */
 
+const folderEndpointErrors = {
+  list: 'This endpoint is deprecated. Please refer to the Label feature endpoints. More information is available at: https://api.jotform.com/docs/#get-user-labels',
+  detail:
+    'This endpoint is deprecated. Please refer to the Label feature endpoints. More information is available at: https://api.jotform.com/docs/#get-label-id',
+  mutate:
+    'This endpoint is deprecated. Please refer to the Label feature endpoints. More information is available at: https://api.jotform.com/docs/#post-label',
+  delete:
+    'This endpoint is deprecated. Please refer to the Label feature endpoints. More information is available at: https://api.jotform.com/docs/#delete-label-id',
+} as const;
+
 /**
  * Get User Folders
  *
+ * @deprecated Use `getLabels` instead
  * @description Get a list of form folders for this account. Returns name of the folder and owner of the folder for shared folders.
  * @link https://api.jotform.com/docs/#user-folders
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-export function getFolders(customHeaders?: HeadersInit): Promise<unknown> {
-  const endPoint = '/user/folders';
-  const requestUrl = getRequestUrl(endPoint);
-
-  const promise = get(requestUrl, customHeaders);
-  return promise;
+export function getFolders(_customHeaders?: HeadersInit): Promise<unknown> {
+  return Promise.reject(new Error(folderEndpointErrors.list));
 }
 
 /**
  * Get Folder Details
  *
+ * @deprecated Use `getLabel` instead
  * @description Get a list of forms in a folder, and other details about the form such as folder color.
  * @link https://api.jotform.com/docs/#folder-id
  * @param {string} folderID
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>
  */
-export function getFolder(folderID: string, customHeaders?: HeadersInit): Promise<unknown> {
-  if (typeof folderID === 'undefined' || folderID === null) {
-    throw new Error('folderID is required');
-  }
-
-  const endPoint = `/folder/${folderID}`;
-  const requestUrl = getRequestUrl(endPoint);
-
-  const promise = get(requestUrl, customHeaders);
-  return promise;
+export function getFolder(_folderID: string, _customHeaders?: HeadersInit): Promise<unknown> {
+  return Promise.reject(new Error(folderEndpointErrors.detail));
 }
 
 /**
  * Create Folder
  *
+ * @deprecated Use `createLabel` instead
  * @description Create a folder with specified parameters
  * @link https://api.jotform.com/docs/#post-folder
  * @param {unknown} folderProperties
@@ -1560,24 +1561,16 @@ export function getFolder(folderID: string, customHeaders?: HeadersInit): Promis
  * @returns {Promise<unknown>}
  */
 export function createFolder(
-  folderProperties: unknown,
-  customHeaders?: HeadersInit,
+  _folderProperties: unknown,
+  _customHeaders?: HeadersInit,
 ): Promise<unknown> {
-  if (typeof folderProperties !== 'object' || folderProperties === null) {
-    throw new Error('folderProperties must be an object');
-  }
-
-  const endPoint = '/folder';
-  const requestUrl = getRequestUrl(endPoint);
-  const postData = folderProperties;
-
-  const promise = post(requestUrl, postData, customHeaders);
-  return promise;
+  return Promise.reject(new Error(folderEndpointErrors.mutate));
 }
 
 /**
  * Update Folder
  *
+ * @deprecated Use `updateLabel` instead
  * @description Update a folder with specified parameters. Also you can add forms to the folder.
  * @link https://api.jotform.com/docs/#put-folder-id
  * @param {string} folderID
@@ -1586,85 +1579,47 @@ export function createFolder(
  * @returns {Promise<unknown>}
  */
 export function updateFolder(
-  folderID: string,
-  folderProperties: unknown,
-  customHeaders?: HeadersInit,
+  _folderID: string,
+  _folderProperties: unknown,
+  _customHeaders?: HeadersInit,
 ): Promise<unknown> {
-  if (typeof folderID === 'undefined' || folderID === null) {
-    throw new Error('folderID is required');
-  }
-
-  if (typeof folderProperties !== 'object' || folderProperties === null) {
-    throw new Error('folderProperties must be an object');
-  }
-
-  const endPoint = `/folder/${folderID}`;
-  const requestUrl = getRequestUrl(endPoint);
-  const postData = folderProperties;
-
-  const promise = put(requestUrl, postData, customHeaders);
-  return promise;
+  return Promise.reject(new Error(folderEndpointErrors.mutate));
 }
 
+/**
+ * @deprecated Use `addResourcesToLabel` instead
+ */
 export function addFormToFolder(
-  folderID: string,
-  formID: string,
-  customHeaders?: HeadersInit,
+  _folderID: string,
+  _formID: string,
+  _customHeaders?: HeadersInit,
 ): Promise<unknown> {
-  if (typeof folderID === 'undefined' || folderID === null) {
-    throw new Error('folderID is required');
-  }
-
-  if (typeof formID === 'undefined' || formID === null) {
-    throw new Error('formID is required');
-  }
-
-  const addFormProperties = {
-    forms: [formID],
-  };
-
-  return updateFolder(folderID, addFormProperties, customHeaders);
+  return Promise.reject(new Error(folderEndpointErrors.mutate));
 }
 
+/**
+ * @deprecated Use `addResourcesToLabel` instead
+ */
 export function addFormsToFolder(
-  folderID: string,
-  formIDs: string[],
-  customHeaders?: HeadersInit,
+  _folderID: string,
+  _formIDs: string[],
+  _customHeaders?: HeadersInit,
 ): Promise<unknown> {
-  if (typeof folderID === 'undefined' || folderID === null) {
-    throw new Error('folderID is required');
-  }
-
-  if (typeof formIDs === 'undefined' || formIDs === null) {
-    throw new Error('formID is required');
-  }
-
-  const folderProperties = {
-    forms: formIDs,
-  };
-
-  return updateFolder(folderID, folderProperties, customHeaders);
+  return Promise.reject(new Error(folderEndpointErrors.mutate));
 }
 
 /**
  * Delete Folder
  *
+ * @deprecated Use `deleteLabel` instead
  * @description Delete a folder and its subfolders
  * @link https://api.jotform.com/docs/#delete-folder-id
  * @param {string} folderID
  * @param {HeadersInit} [customHeaders]
  * @returns {Promise<unknown>}
  */
-export function deleteFolder(folderID: string, customHeaders?: HeadersInit): Promise<unknown> {
-  if (typeof folderID === 'undefined' || folderID === null) {
-    throw new Error('folderID is required');
-  }
-
-  const endPoint = `/folder/${folderID}`;
-  const requestUrl = getRequestUrl(endPoint);
-
-  const promise = del(requestUrl, customHeaders);
-  return promise;
+export function deleteFolder(_folderID: string, _customHeaders?: HeadersInit): Promise<unknown> {
+  return Promise.reject(new Error(folderEndpointErrors.delete));
 }
 
 // #endregion Folders
