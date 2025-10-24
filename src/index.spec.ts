@@ -33,6 +33,7 @@ describe('index', () => {
   });
 });
 
+// #region General
 /**
  * General
  */
@@ -107,6 +108,9 @@ describe('getPlan()', () => {
   });
 });
 
+// #endregion General
+
+// #region Forms
 /**
  * Forms
  */
@@ -225,6 +229,9 @@ describe('cloneForm()', () => {
   });
 });
 
+// #endregion Forms
+
+// #region Form files
 /**
  * Form files
  */
@@ -237,6 +244,9 @@ describe('getFormFiles()', () => {
   });
 });
 
+// #endregion Form files
+
+// #region Form properties
 /**
  * Form properties
  */
@@ -297,6 +307,9 @@ describe('addFormProperties()', () => {
   });
 });
 
+// #endregion Form properties
+
+// #region Form questions
 /**
  * Form questions
  */
@@ -434,6 +447,9 @@ describe('deleteFormQuestion()', () => {
   });
 });
 
+// #endregion Form questions
+
+// #region Form reports
 /**
  * Form reports
  */
@@ -505,6 +521,9 @@ describe('deleteFormReport()', () => {
   });
 });
 
+// #endregion Form reports
+
+// #region Form submissions
 /**
  * Form submissions
  */
@@ -621,6 +640,9 @@ describe('deleteFormSubmission()', () => {
   });
 });
 
+// #endregion Form submissions
+
+// #region Form webhooks
 /**
  * Form webhooks
  */
@@ -688,6 +710,9 @@ describe('deleteFormWebhook()', () => {
   });
 });
 
+// #endregion Form webhooks
+
+// #region Labels
 /**
  * Labels
  */
@@ -928,6 +953,9 @@ describe('deleteLabel()', () => {
   });
 });
 
+// #endregion Labels
+
+// #region Folders
 /**
  * Folders
  */
@@ -1057,6 +1085,9 @@ describe('deleteFolder()', () => {
   });
 });
 
+// #endregion Folders
+
+// #region Reports
 /**
  * Reports
  */
@@ -1101,6 +1132,9 @@ describe('deleteReport()', () => {
   });
 });
 
+// #endregion Reports
+
+// #region Submissions
 /**
  * Submissions
  */
@@ -1150,3 +1184,5 @@ describe('deleteSubmission()', () => {
     expect(response).toBe(`Submission #${createdSubmissionId} deleted successfully.`);
   });
 });
+
+// #endregion Submissions

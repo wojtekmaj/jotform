@@ -200,6 +200,7 @@ export function options(newOptions: Partial<Options>): void {
   }
 }
 
+// #region General
 /**
  * General
  */
@@ -377,6 +378,9 @@ export function getPlan(planName: string, customHeaders?: HeadersInit): Promise<
   return promise;
 }
 
+// #endregion General
+
+// #region Forms
 /**
  * Forms
  */
@@ -554,6 +558,9 @@ export function cloneForm(formID: string, customHeaders?: HeadersInit): Promise<
   return promise;
 }
 
+// #endregion Forms
+
+// #region Form files
 /**
  * Form files
  */
@@ -579,6 +586,9 @@ export function getFormFiles(formID: string, customHeaders?: HeadersInit): Promi
   return promise;
 }
 
+// #endregion Form files
+
+// #region Form properties
 /**
  * Form properties
  */
@@ -692,6 +702,9 @@ export function addFormProperties(
   return promise;
 }
 
+// #endregion Form properties
+
+// #region Form questions
 /**
  * Form questions
  */
@@ -876,6 +889,9 @@ export function deleteFormQuestion(
   return promise;
 }
 
+// #endregion Form questions
+
+// #region Form reports
 /**
  * Form reports
  */
@@ -968,6 +984,9 @@ export function deleteFormReport(
   return deleteReport(reportID, customHeaders);
 }
 
+// #endregion Form reports
+
+// #region Form submissions
 /**
  * Form submissions
  */
@@ -1144,6 +1163,9 @@ export function deleteFormSubmission(
   return deleteSubmission(submissionID, customHeaders);
 }
 
+// #endregion Form submissions
+
+// #region Form webhooks
 /**
  * Form webhooks
  */
@@ -1232,6 +1254,9 @@ export function deleteFormWebhook(
   return promise;
 }
 
+// #endregion Form webhooks
+
+// #region Labels
 /**
  * Labels
  */
@@ -1481,6 +1506,9 @@ export function deleteLabel(labelID: string, customHeaders?: HeadersInit): Promi
   return promise;
 }
 
+// #endregion Labels
+
+// #region Folders
 /**
  * Folders
  */
@@ -1639,6 +1667,9 @@ export function deleteFolder(folderID: string, customHeaders?: HeadersInit): Pro
   return promise;
 }
 
+// #endregion Folders
+
+// #region Reports
 /**
  * Reports
  */
@@ -1701,6 +1732,9 @@ export function deleteReport(reportID: string, customHeaders?: HeadersInit): Pro
   return promise;
 }
 
+// #endregion Reports
+
+// #region Submissions
 /**
  * Submissions
  */
@@ -1853,6 +1887,8 @@ export function deleteSubmission(
   const promise = del(requestUrl, customHeaders);
   return promise;
 }
+
+// #endregion Submissions
 
 /* For backwards compatibility */
 export const getFormPropertyByKey: (
