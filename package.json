@@ -40,7 +40,7 @@
     "object-to-formdata": "^4.5.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.2.4",
+    "@biomejs/biome": "2.2.2",
     "@types/node": "*",
     "@wojtekmaj/async-array-utils": "^2.0.0",
     "husky": "^9.0.0",
