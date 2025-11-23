@@ -1,4 +1,18 @@
 import { serialize } from 'object-to-formdata';
+import type {
+  Form,
+  FormFile,
+  FormProperties,
+  FormReport,
+  Plan,
+  PlanName,
+  Question,
+  Submission,
+  UpdateUserSettings,
+  User,
+  UserSettings,
+  UserUsage,
+} from './types.js';
 
 type Options = {
   /**
@@ -277,13 +291,13 @@ export function getHistory(
  * @description Get user's time zone and language.
  * @link https://api.jotform.com/docs/#user-settings
  * @param {HeadersInit} [customHeaders]
- * @returns {Promise<unknown>}
+ * @returns {Promise<UserSettings>}
  */
-export function getSettings(customHeaders?: HeadersInit): Promise<unknown> {
+export function getSettings(customHeaders?: HeadersInit): Promise<UserSettings> {
   const endPoint = '/user/settings';
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl, customHeaders);
+  const promise = get<UserSettings>(requestUrl, customHeaders);
   return promise;
 }
 
@@ -297,7 +311,7 @@ export function getSettings(customHeaders?: HeadersInit): Promise<unknown> {
  * @returns {Promise<unknown>}
  */
 export function updateSettings(
-  settingsData: unknown,
+  settingsData: UpdateUserSettings,
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
   if (typeof settingsData !== 'object' || settingsData === null) {
@@ -334,13 +348,13 @@ export function getSubusers(customHeaders?: HeadersInit): Promise<unknown> {
  * @description Get number of form submissions received this month. Also, get number of SSL form submissions, payment form submissions and upload space used by user.
  * @link https://api.jotform.com/docs/#user-usage
  * @param {HeadersInit} [customHeaders]
- * @returns {Promise<unknown>}
+ * @returns {Promise<UserUsage>}
  */
-export function getUsage(customHeaders?: HeadersInit): Promise<unknown> {
+export function getUsage(customHeaders?: HeadersInit): Promise<UserUsage> {
   const endPoint = '/user/usage';
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl, customHeaders);
+  const promise = get<UserUsage>(requestUrl, customHeaders);
   return promise;
 }
 
@@ -350,13 +364,13 @@ export function getUsage(customHeaders?: HeadersInit): Promise<unknown> {
  * @description Get user account details for this Jotform user. Including user account type, avatar URL, name, email, website URL.
  * @link https://api.jotform.com/docs/#user
  * @param {HeadersInit} [customHeaders]
- * @returns {Promise<unknown>}
+ * @returns {Promise<User>}
  */
-export function getUser(customHeaders?: HeadersInit): Promise<unknown> {
+export function getUser(customHeaders?: HeadersInit): Promise<User> {
   const endPoint = '/user';
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl, customHeaders);
+  const promise = get<User>(requestUrl, customHeaders);
   return promise;
 }
 
@@ -364,9 +378,9 @@ export function getUser(customHeaders?: HeadersInit): Promise<unknown> {
  * Get details of a plan
  *
  * @description Get limit and prices of a plan.
- * @param {string} planName
+ * @param {PlanName} planName
  */
-export function getPlan(planName: string, customHeaders?: HeadersInit): Promise<unknown> {
+export function getPlan(planName: PlanName, customHeaders?: HeadersInit): Promise<Plan> {
   if (planName === undefined) {
     throw new Error('Plan name is undefined');
   }
@@ -374,7 +388,7 @@ export function getPlan(planName: string, customHeaders?: HeadersInit): Promise<
   const endPoint = `/system/plan/${planName}`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl, customHeaders);
+  const promise = get<Plan>(requestUrl, customHeaders);
   return promise;
 }
 
@@ -424,9 +438,9 @@ type GetFormsQuery = {
  * @link https://api.jotform.com/docs/#user-forms
  * @param {GetFormsQuery} [query]
  * @param {HeadersInit} [customHeaders]
- * @returns {Promise<unknown>}
+ * @returns {Promise<Form[]>}
  */
-export function getForms(query: GetFormsQuery = {}, customHeaders?: HeadersInit): Promise<unknown> {
+export function getForms(query: GetFormsQuery = {}, customHeaders?: HeadersInit): Promise<Form[]> {
   const { filter, offset, limit, orderby, direction, fullText } = query;
 
   if (filter && typeof filter !== 'object') {
@@ -447,7 +461,7 @@ export function getForms(query: GetFormsQuery = {}, customHeaders?: HeadersInit)
     direction,
   });
 
-  const promise = get(requestUrl, customHeaders);
+  const promise = get<Form[]>(requestUrl, customHeaders);
   return promise;
 }
 
@@ -458,9 +472,9 @@ export function getForms(query: GetFormsQuery = {}, customHeaders?: HeadersInit)
  * @link https://api.jotform.com/docs/#form-id
  * @param {string} formID
  * @param {HeadersInit} [customHeaders]
- * @returns {Promise<unknown>}
+ * @returns {Promise<Form>}
  */
-export function getForm(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
+export function getForm(formID: string, customHeaders?: HeadersInit): Promise<Form> {
   if (typeof formID === 'undefined' || formID === null) {
     throw new Error('formID is required');
   }
@@ -468,7 +482,7 @@ export function getForm(formID: string, customHeaders?: HeadersInit): Promise<un
   const endPoint = `/form/${formID}`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl, customHeaders);
+  const promise = get<Form>(requestUrl, customHeaders);
   return promise;
 }
 
@@ -572,9 +586,9 @@ export function cloneForm(formID: string, customHeaders?: HeadersInit): Promise<
  * @link https://api.jotform.com/docs/#form-id-files
  * @param {string} formID
  * @param {HeadersInit} [customHeaders]
- * @returns {Promise<unknown>}
+ * @returns {Promise<FormFile[]>}
  */
-export function getFormFiles(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
+export function getFormFiles(formID: string, customHeaders?: HeadersInit): Promise<FormFile[]> {
   if (typeof formID === 'undefined' || formID === null) {
     throw new Error('formID is required');
   }
@@ -582,7 +596,7 @@ export function getFormFiles(formID: string, customHeaders?: HeadersInit): Promi
   const endPoint = `/form/${formID}/files`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl, customHeaders);
+  const promise = get<FormFile[]>(requestUrl, customHeaders);
   return promise;
 }
 
@@ -600,9 +614,12 @@ export function getFormFiles(formID: string, customHeaders?: HeadersInit): Promi
  * @link https://api.jotform.com/docs/#form-id-properties
  * @param {string} formID
  * @param {HeadersInit} [customHeaders]
- * @returns {Promise<unknown>}
+ * @returns {Promise<FormProperties>}
  */
-export function getFormProperties(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
+export function getFormProperties(
+  formID: string,
+  customHeaders?: HeadersInit,
+): Promise<FormProperties> {
   if (typeof formID === 'undefined' || formID === null) {
     throw new Error('formID is required');
   }
@@ -610,7 +627,7 @@ export function getFormProperties(formID: string, customHeaders?: HeadersInit): 
   const endPoint = `/form/${formID}/properties`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl, customHeaders);
+  const promise = get<FormProperties>(requestUrl, customHeaders);
   return promise;
 }
 
@@ -716,9 +733,12 @@ export function addFormProperties(
  * @link https://api.jotform.com/docs/#form-id-questions
  * @param {string} formID
  * @param {HeadersInit} [customHeaders]
- * @returns {Promise<unknown>}
+ * @returns {Promise<{[question: string]: Question}>}
  */
-export function getFormQuestions(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
+export function getFormQuestions(
+  formID: string,
+  customHeaders?: HeadersInit,
+): Promise<{ [question: string]: Question }> {
   if (typeof formID === 'undefined' || formID === null) {
     throw new Error('formID is required');
   }
@@ -726,7 +746,7 @@ export function getFormQuestions(formID: string, customHeaders?: HeadersInit): P
   const endPoint = `/form/${formID}/questions`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl, customHeaders);
+  const promise = get<{ [question: string]: Question }>(requestUrl, customHeaders);
   return promise;
 }
 
@@ -738,13 +758,13 @@ export function getFormQuestions(formID: string, customHeaders?: HeadersInit): P
  * @param {string} formID
  * @param {string} questionID
  * @param {HeadersInit} [customHeaders]
- * @returns {Promise<unknown>}
+ * @returns {Promise<Question>}
  */
 export function getFormQuestion(
   formID: string,
   questionID: string,
   customHeaders?: HeadersInit,
-): Promise<unknown> {
+): Promise<Question> {
   if (typeof formID === 'undefined' || formID === null) {
     throw new Error('formID is required');
   }
@@ -756,7 +776,7 @@ export function getFormQuestion(
   const endPoint = `/form/${formID}/question/${questionID}`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl, customHeaders);
+  const promise = get<Question>(requestUrl, customHeaders);
   return promise;
 }
 
@@ -873,7 +893,7 @@ export function deleteFormQuestion(
   formID: string,
   questionID: string,
   customHeaders?: HeadersInit,
-): Promise<unknown> {
+): Promise<string> {
   if (typeof formID === 'undefined' || formID === null) {
     throw new Error('formID is required');
   }
@@ -885,7 +905,7 @@ export function deleteFormQuestion(
   const endPoint = `/form/${formID}/question/${questionID}`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = del(requestUrl, customHeaders);
+  const promise = del<string>(requestUrl, customHeaders);
   return promise;
 }
 
@@ -903,9 +923,9 @@ export function deleteFormQuestion(
  * @link https://api.jotform.com/docs/#form-id-reports
  * @param {string} formID
  * @param {HeadersInit} [customHeaders]
- * @returns {Promise<unknown>}
+ * @returns {Promise<FormReport[]>}
  */
-export function getFormReports(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
+export function getFormReports(formID: string, customHeaders?: HeadersInit): Promise<FormReport[]> {
   if (typeof formID === 'undefined' || formID === null) {
     throw new Error('formID is required');
   }
@@ -913,7 +933,7 @@ export function getFormReports(formID: string, customHeaders?: HeadersInit): Pro
   const endPoint = `/form/${formID}/reports`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl, customHeaders);
+  const promise = get<FormReport[]>(requestUrl, customHeaders);
   return promise;
 }
 
@@ -1031,13 +1051,13 @@ type GetFormSubmissionsQuery = {
  * @param {string} formID
  * @param {GetFormSubmissionsQuery} [query]
  * @param {HeadersInit} [customHeaders]
- * @returns {Promise<unknown>}
+ * @returns {Promise<Submission[]>}
  */
 export function getFormSubmissions(
   formID: string,
   query: GetFormSubmissionsQuery = {},
   customHeaders?: HeadersInit,
-): Promise<unknown> {
+): Promise<Submission[]> {
   if (typeof formID === 'undefined' || formID === null) {
     throw new Error('formID is required');
   }
@@ -1061,7 +1081,7 @@ export function getFormSubmissions(
     direction,
   });
 
-  const promise = get(requestUrl, customHeaders);
+  const promise = get<Submission[]>(requestUrl, customHeaders);
   return promise;
 }
 

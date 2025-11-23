@@ -4,6 +4,7 @@ import pThrottle from 'p-throttle';
 import { z } from 'zod';
 
 import * as jotform from './index.js';
+import { FormStatus, PlanName, SubmissionStatus } from './types.js';
 
 const TEST_FORM_ID = '232143945675058';
 
@@ -97,10 +98,10 @@ describe('getUser()', () => {
 
 describe('getPlan()', () => {
   it('returns plan data properly', async () => {
-    const response = await jotform.getPlan('FREE');
+    const response = await jotform.getPlan(PlanName.FREE);
 
     expect(response).toMatchObject({
-      name: 'FREE',
+      name: PlanName.FREE,
     });
   });
 });
@@ -114,13 +115,20 @@ describe('getPlan()', () => {
 
 describe('getForms()', () => {
   it('returns forms data properly', async () => {
-    const response = await jotform.getForms({ filter: { status: 'ENABLED' } });
+    const response = await jotform.getForms({ filter: { status: FormStatus.ENABLED } });
 
     expect(response).toMatchObject(expect.any(Array));
 
-    const anyResponse = z.any().parse(response);
+    const parsedResponse = z
+      .array(
+        z.object({
+          id: z.string(),
+          status: z.enum([FormStatus.ENABLED]),
+        }),
+      )
+      .parse(response);
 
-    const testForm = anyResponse.find((form: { id: string }) => form.id === TEST_FORM_ID);
+    const testForm = parsedResponse.find((form) => form.id === TEST_FORM_ID);
 
     expect(testForm).toBeDefined();
   });
@@ -1075,16 +1083,23 @@ describe('getSubmissions()', () => {
   it('returns submissions data properly', async () => {
     const response = await jotform.getSubmissions({
       filter: {
-        status: 'ACTIVE',
+        status: SubmissionStatus.ACTIVE,
       },
     });
 
     expect(response).toMatchObject(expect.any(Array));
 
-    const anyResponse = z.any().parse(response);
+    const parsedResponse = z
+      .array(
+        z.object({
+          id: z.string(),
+          status: z.enum([SubmissionStatus.ACTIVE]),
+        }),
+      )
+      .parse(response);
 
-    const testFormSubmission = anyResponse.find(
-      (submission: { id: string }) => submission.id === TEST_FORM_SUBMISSION_ID,
+    const testFormSubmission = parsedResponse.find(
+      (submission) => submission.id === TEST_FORM_SUBMISSION_ID,
     );
 
     expect(testFormSubmission).toBeDefined();
