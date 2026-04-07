@@ -385,7 +385,7 @@ __metadata:
     p-throttle: "npm:^7.0.0"
     typescript: "npm:^6.0.2"
     vitest: "npm:^4.1.0"
-    zod: "npm:^3.22.3"
+    zod: "npm:^4.0.0"
   languageName: unknown
   linkType: soft
 
@@ -948,9 +948,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:^3.22.3":
-  version: 3.22.3
-  resolution: "zod@npm:3.22.3"
-  checksum: 10c0/cb4b24aed7dec98552eb9042e88cbd645455bf2830e5704174d2da96f554dabad4630e3b4f6623e1b6562b9eaa43535a37b7f2011f29b8d8e9eabe1ddf3b656b
+"zod@npm:^4.0.0":
+  version: 4.3.6
+  resolution: "zod@npm:4.3.6"
+  checksum: 10c0/860d25a81ab41d33aa25f8d0d07b091a04acb426e605f396227a796e9e800c44723ed96d0f53a512b57be3d1520f45bf69c0cb3b378a232a00787a2609625307
   languageName: node
   linkType: hard
