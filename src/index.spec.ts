@@ -19,6 +19,12 @@ const TEST_FOLDER_ID = '64cba4746334320c7c37f6b1';
 
 const TEST_REPORT_ID = '232152641243042';
 
+const objectWithIdSchema = z.object({
+  id: z.string(),
+});
+const objectWithQidSchema = z.object({ qid: z.number() });
+const objectWithSubmissionIdSchema = z.object({ submissionID: z.string() });
+
 // Throttle fetch API calls to avoid rate limiting
 const throttle = pThrottle({ limit: 1, interval: 1000 });
 
@@ -189,9 +195,9 @@ describe('deleteForm()', () => {
   beforeAll(async () => {
     const response = await jotform.createForm({ questions: [] });
 
-    const anyResponse = z.any().parse(response);
+    const objectWithIdResponse = objectWithIdSchema.parse(response);
 
-    createdFormId = anyResponse.id;
+    createdFormId = objectWithIdResponse.id;
   });
 
   it('deletes form properly', async () => {
@@ -398,9 +404,9 @@ describe('updateFormQuestion()', () => {
       },
     });
 
-    const anyResponse = z.any().parse(response);
+    const objectWithQidResponse = objectWithQidSchema.parse(response);
 
-    createdQuestionId = anyResponse.qid.toString();
+    createdQuestionId = objectWithQidResponse.qid.toString();
   });
 
   it('updates form question properly', async () => {
@@ -432,9 +438,9 @@ describe('deleteFormQuestion()', () => {
       },
     });
 
-    const anyResponse = z.any().parse(response);
+    const objectWithQidResponse = objectWithQidSchema.parse(response);
 
-    createdQuestionId = anyResponse.qid.toString();
+    createdQuestionId = objectWithQidResponse.qid.toString();
   });
 
   it('deletes form question properly', async () => {
@@ -506,9 +512,9 @@ describe('deleteFormReport()', () => {
       fields: 'ip,dt,1',
     });
 
-    const anyResponse = z.any().parse(response);
+    const objectWithIdResponse = objectWithIdSchema.parse(response);
 
-    createdReportId = anyResponse.id;
+    createdReportId = objectWithIdResponse.id;
   });
 
   it('deletes form report properly', async () => {
@@ -625,9 +631,9 @@ describe('deleteFormSubmission()', () => {
       },
     });
 
-    const anyResponse = z.any().parse(response);
+    const objectWithSubmissionIdResponse = objectWithSubmissionIdSchema.parse(response);
 
-    createdSubmissionId = anyResponse.submissionID;
+    createdSubmissionId = objectWithSubmissionIdResponse.submissionID;
   });
 
   it('deletes form submission properly', async () => {
@@ -690,12 +696,11 @@ describe('deleteFormWebhook()', () => {
 
     const response = await jotform.createFormWebhook(TEST_FORM_ID, webhookUrl);
 
-    const anyResponse = z.any().parse(response);
+    const objectWithWebhookIdResponse = z.record(z.string(), z.url()).parse(response);
 
-    const [webhookId] = Object.entries(anyResponse).find(([, url]) => url === webhookUrl) as [
-      string,
-      string,
-    ];
+    const [webhookId] = Object.entries(objectWithWebhookIdResponse).find(
+      ([, url]) => url === webhookUrl,
+    ) as [string, string];
 
     createdWebhookId = webhookId;
   });
@@ -759,9 +764,9 @@ describe('getLabel()', () => {
   beforeAll(async () => {
     const response = await jotform.createLabel({ name: 'Test label', color: '#FFFFFF' });
 
-    const anyResponse = z.any().parse(response);
+    const objectWithIdResponse = objectWithIdSchema.parse(response);
 
-    createdLabelId = anyResponse.id;
+    createdLabelId = objectWithIdResponse.id;
   });
 
   afterAll(async () => {
@@ -806,9 +811,9 @@ describe('updateLabel()', () => {
   beforeAll(async () => {
     const response = await jotform.createLabel({ name: 'Updatable label', color: '#ABCDEF' });
 
-    const anyResponse = z.any().parse(response);
+    const objectWithIdResponse = objectWithIdSchema.parse(response);
 
-    createdLabelId = anyResponse.id;
+    createdLabelId = objectWithIdResponse.id;
   });
 
   afterAll(async () => {
@@ -834,9 +839,9 @@ describe('getLabelResources()', () => {
   beforeAll(async () => {
     const response = await jotform.createLabel({ name: 'Resources label', color: '#EEEEEE' });
 
-    const anyResponse = z.any().parse(response);
+    const objectWithIdResponse = objectWithIdSchema.parse(response);
 
-    createdLabelId = anyResponse.id;
+    createdLabelId = objectWithIdResponse.id;
   });
 
   afterAll(async () => {
@@ -861,9 +866,9 @@ describe('addResourcesToLabel()', () => {
   beforeAll(async () => {
     const response = await jotform.createLabel({ name: 'Add resource label', color: '#C0FFEE' });
 
-    const anyResponse = z.any().parse(response);
+    const objectWithIdResponse = objectWithIdSchema.parse(response);
 
-    createdLabelId = anyResponse.id;
+    createdLabelId = objectWithIdResponse.id;
   });
 
   afterAll(async () => {
@@ -897,9 +902,9 @@ describe('removeResourcesFromLabel()', () => {
   beforeAll(async () => {
     const response = await jotform.createLabel({ name: 'Remove resource label', color: '#BADA55' });
 
-    const anyResponse = z.any().parse(response);
+    const objectWithIdResponse = objectWithIdSchema.parse(response);
 
-    createdLabelId = anyResponse.id;
+    createdLabelId = objectWithIdResponse.id;
 
     await jotform.addResourcesToLabel(createdLabelId, resource);
   });
@@ -930,9 +935,9 @@ describe('deleteLabel()', () => {
   beforeAll(async () => {
     const response = await jotform.createLabel({ name: 'Disposable label', color: '#654321' });
 
-    const anyResponse = z.any().parse(response);
+    const objectWithIdResponse = objectWithIdSchema.parse(response);
 
-    createdLabelId = anyResponse.id;
+    createdLabelId = objectWithIdResponse.id;
   });
 
   afterAll(async () => {
@@ -1052,9 +1057,9 @@ describe('deleteReport()', () => {
       fields: 'ip,dt,1',
     });
 
-    const anyResponse = z.any().parse(response);
+    const objectWithIdResponse = objectWithIdSchema.parse(response);
 
-    createdReportId = anyResponse.id;
+    createdReportId = objectWithIdResponse.id;
   });
 
   it('deletes report properly', async () => {
@@ -1105,9 +1110,9 @@ describe('deleteSubmission()', () => {
       },
     });
 
-    const anyResponse = z.any().parse(response);
+    const objectWithSubmissionIdResponse = objectWithSubmissionIdSchema.parse(response);
 
-    createdSubmissionId = anyResponse.submissionID;
+    createdSubmissionId = objectWithSubmissionIdResponse.submissionID;
   });
 
   it('deletes form submission properly', async () => {
