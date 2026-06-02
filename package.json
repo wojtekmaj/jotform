@@ -46,7 +46,7 @@
     "husky": "^9.0.0",
     "p-throttle": "^7.0.0",
     "typescript": "^6.0.2",
-    "vitest": "^4.1.0",
+    "vitest": "^4.1.8",
     "zod": "^4.0.0"
   },
   "publishConfig": {
