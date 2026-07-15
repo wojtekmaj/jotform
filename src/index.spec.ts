@@ -26,7 +26,7 @@ const objectWithQidSchema = z.object({ qid: z.number() });
 const objectWithSubmissionIdSchema = z.object({ submissionID: z.string() });
 
 // Throttle fetch API calls to avoid rate limiting
-const throttle = pThrottle({ limit: 1, interval: 1000 });
+const throttle = pThrottle({ limit: 1, interval: 2000, strict: true });
 
 vi.stubGlobal('fetch', throttle(fetch));
 
