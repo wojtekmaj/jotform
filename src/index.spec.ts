@@ -25,11 +25,10 @@ const objectWithIdSchema = z.object({
 const objectWithQidSchema = z.object({ qid: z.number() });
 const objectWithSubmissionIdSchema = z.object({ submissionID: z.string() });
 
-// Jotform starts returning 502 responses from the label API after roughly 50 requests per minute.
-const perSecondThrottle = pThrottle({ limit: 1, interval: 1000, strict: true });
-const perMinuteThrottle = pThrottle({ limit: 50, interval: 60_000, strict: true });
+// Throttle fetch API calls to avoid rate limiting
+const throttle = pThrottle({ limit: 1, interval: 1000 });
 
-vi.stubGlobal('fetch', perMinuteThrottle(perSecondThrottle(fetch)));
+vi.stubGlobal('fetch', throttle(fetch));
 
 describe('index', () => {
   it('has options exported properly', () => {
@@ -760,184 +759,19 @@ describe('getLabels()', () => {
   });
 });
 
-describe('getLabel()', () => {
-  let createdLabelId: string;
-
-  beforeAll(async () => {
-    const response = await jotform.createLabel({ name: 'Test label', color: '#FFFFFF' });
-
-    const objectWithIdResponse = objectWithIdSchema.parse(response);
-
-    createdLabelId = objectWithIdResponse.id;
-  });
-
-  afterAll(async () => {
-    await jotform.deleteLabel(createdLabelId);
-  });
-
-  it('returns label data properly', async () => {
-    const response = await jotform.getLabel(createdLabelId);
-
-    expect(response).toMatchObject({
-      id: createdLabelId,
-      name: expect.any(String),
-    });
-  });
-});
-
-describe('createLabel()', () => {
-  const createdLabelIds: string[] = [];
-
-  afterAll(async () => {
-    await asyncForEach(createdLabelIds, async (labelId) => {
-      await jotform.deleteLabel(labelId);
-    });
-  });
-
-  it('creates label properly', async () => {
-    const response = await jotform.createLabel({ name: 'Another test label', color: '#DDDDDD' });
-
-    expect(response).toMatchObject({
-      id: expect.any(String),
-    });
-
-    const anyResponse = z.any().parse(response);
-
-    createdLabelIds.push(anyResponse.id);
-  });
-});
-
-describe('updateLabel()', () => {
-  let createdLabelId: string;
-
-  beforeAll(async () => {
-    const response = await jotform.createLabel({ name: 'Updatable label', color: '#ABCDEF' });
-
-    const objectWithIdResponse = objectWithIdSchema.parse(response);
-
-    createdLabelId = objectWithIdResponse.id;
-  });
-
-  afterAll(async () => {
-    await jotform.deleteLabel(createdLabelId);
-  });
-
-  it('updates label properly', async () => {
-    const response = await jotform.updateLabel(createdLabelId, {
-      name: 'Updated label',
-      color: '#123456',
-    });
-
-    expect(response).toMatchObject({
-      name: 'Updated label',
-      color: '#123456',
-    });
-  });
-});
-
-describe('getLabelResources()', () => {
-  let createdLabelId: string;
-
-  beforeAll(async () => {
-    const response = await jotform.createLabel({ name: 'Resources label', color: '#EEEEEE' });
-
-    const objectWithIdResponse = objectWithIdSchema.parse(response);
-
-    createdLabelId = objectWithIdResponse.id;
-  });
-
-  afterAll(async () => {
-    await jotform.deleteLabel(createdLabelId);
-  });
-
-  it('returns label resources properly', async () => {
-    const response = await jotform.getLabelResources(createdLabelId);
-
-    expect(response).toMatchObject(expect.any(Array));
-  });
-});
-
-describe('addResourcesToLabel()', () => {
+describe.sequential('label lifecycle', () => {
   const resource = {
     id: TEST_FORM_ID,
     type: 'form',
   } as const;
 
-  let createdLabelId: string;
+  let createdLabelId = '';
+  let createLabelResponse: unknown;
 
   beforeAll(async () => {
-    const response = await jotform.createLabel({ name: 'Add resource label', color: '#C0FFEE' });
+    createLabelResponse = await jotform.createLabel({ name: 'Test label', color: '#FFFFFF' });
 
-    const objectWithIdResponse = objectWithIdSchema.parse(response);
-
-    createdLabelId = objectWithIdResponse.id;
-  });
-
-  afterAll(async () => {
-    await jotform.deleteLabel(createdLabelId);
-  });
-
-  it('adds resource to label properly', async () => {
-    const response = await jotform.addResourcesToLabel(createdLabelId, resource);
-
-    expect(response).toMatchObject(expect.any(Array));
-
-    const anyResponse = z.any().parse(response);
-
-    const item = anyResponse[0];
-
-    expect(item).toMatchObject({
-      id: resource.id,
-      type: expect.any(String),
-    });
-  });
-});
-
-describe('removeResourcesFromLabel()', () => {
-  const resource = {
-    id: TEST_FORM_ID,
-    type: 'form',
-  } as const;
-
-  let createdLabelId: string;
-
-  beforeAll(async () => {
-    const response = await jotform.createLabel({ name: 'Remove resource label', color: '#BADA55' });
-
-    const objectWithIdResponse = objectWithIdSchema.parse(response);
-
-    createdLabelId = objectWithIdResponse.id;
-
-    await jotform.addResourcesToLabel(createdLabelId, resource);
-  });
-
-  afterAll(async () => {
-    await jotform.deleteLabel(createdLabelId);
-  });
-
-  it('removes resources from label properly', async () => {
-    const response = await jotform.removeResourcesFromLabel(createdLabelId, [resource]);
-
-    expect(response).toMatchObject(expect.any(Array));
-
-    const anyResponse = z.any().parse(response);
-
-    const item = anyResponse[0];
-
-    expect(item).toMatchObject({
-      id: resource.id,
-      type: expect.any(String),
-    });
-  });
-});
-
-describe('deleteLabel()', () => {
-  let createdLabelId: string;
-
-  beforeAll(async () => {
-    const response = await jotform.createLabel({ name: 'Disposable label', color: '#654321' });
-
-    const objectWithIdResponse = objectWithIdSchema.parse(response);
+    const objectWithIdResponse = objectWithIdSchema.parse(createLabelResponse);
 
     createdLabelId = objectWithIdResponse.id;
   });
@@ -948,12 +782,89 @@ describe('deleteLabel()', () => {
     }
   });
 
-  it('deletes label properly', async () => {
-    const response = await jotform.deleteLabel(createdLabelId);
+  describe('createLabel()', () => {
+    it('creates label properly', () => {
+      expect(createLabelResponse).toMatchObject({
+        id: createdLabelId,
+      });
+    });
+  });
 
-    expect(response).toBe(true);
+  describe('getLabel()', () => {
+    it('returns label data properly', async () => {
+      const response = await jotform.getLabel(createdLabelId);
 
-    createdLabelId = '';
+      expect(response).toMatchObject({
+        id: createdLabelId,
+        name: expect.any(String),
+      });
+    });
+  });
+
+  describe('updateLabel()', () => {
+    it('updates label properly', async () => {
+      const response = await jotform.updateLabel(createdLabelId, {
+        name: 'Updated label',
+        color: '#123456',
+      });
+
+      expect(response).toMatchObject({
+        name: 'Updated label',
+        color: '#123456',
+      });
+    });
+  });
+
+  describe('getLabelResources()', () => {
+    it('returns label resources properly', async () => {
+      const response = await jotform.getLabelResources(createdLabelId);
+
+      expect(response).toMatchObject(expect.any(Array));
+    });
+  });
+
+  describe('addResourcesToLabel()', () => {
+    it('adds resource to label properly', async () => {
+      const response = await jotform.addResourcesToLabel(createdLabelId, resource);
+
+      expect(response).toMatchObject(expect.any(Array));
+
+      const anyResponse = z.any().parse(response);
+
+      const item = anyResponse[0];
+
+      expect(item).toMatchObject({
+        id: resource.id,
+        type: expect.any(String),
+      });
+    });
+  });
+
+  describe('removeResourcesFromLabel()', () => {
+    it('removes resources from label properly', async () => {
+      const response = await jotform.removeResourcesFromLabel(createdLabelId, [resource]);
+
+      expect(response).toMatchObject(expect.any(Array));
+
+      const anyResponse = z.any().parse(response);
+
+      const item = anyResponse[0];
+
+      expect(item).toMatchObject({
+        id: resource.id,
+        type: expect.any(String),
+      });
+    });
+  });
+
+  describe('deleteLabel()', () => {
+    it('deletes label properly', async () => {
+      const response = await jotform.deleteLabel(createdLabelId);
+
+      expect(response).toBe(true);
+
+      createdLabelId = '';
+    });
   });
 });
 
