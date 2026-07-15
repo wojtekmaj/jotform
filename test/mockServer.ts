@@ -22,22 +22,29 @@ const settings: Record<string, unknown> = {
   email: 'test@example.com',
   website: 'https://example.com',
 };
+
 const forms = new Map<string, Record<string, unknown>>([
   [TEST_FORM_ID, { id: TEST_FORM_ID, title: 'Test form', status: 'ENABLED' }],
 ]);
+
 const formProperties = new Map<string, Record<string, unknown>>([
   [TEST_FORM_ID, { pagetitle: 'Test form' }],
 ]);
+
 const questions = new Map<string, Record<string, unknown>>([
   [TEST_FORM_QUESTION_ID, { qid: Number(TEST_FORM_QUESTION_ID), type: 'control_textbox' }],
 ]);
+
 const reports = new Map<string, Record<string, unknown>>([
   [TEST_REPORT_ID, { id: TEST_REPORT_ID, title: 'Test report' }],
 ]);
+
 const submissions = new Map<string, Record<string, unknown>>([
   [TEST_FORM_SUBMISSION_ID, { id: TEST_FORM_SUBMISSION_ID, form_id: TEST_FORM_ID }],
 ]);
+
 const webhooks = new Map<string, string>();
+
 const labels = new Map<string, Record<string, unknown>>();
 
 function jotformResponse(content: unknown) {
