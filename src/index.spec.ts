@@ -1,8 +1,5 @@
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { asyncForEach } from '@wojtekmaj/async-array-utils';
-import { HttpResponse, http } from 'msw';
-import { setupServer } from 'msw/node';
-import pThrottle from 'p-throttle';
 import { z } from 'zod';
 
 import * as jotform from './index.js';
@@ -27,11 +24,6 @@ const objectWithIdSchema = z.object({
 const objectWithQidSchema = z.object({ qid: z.number() });
 const objectWithSubmissionIdSchema = z.object({ submissionID: z.string() });
 
-// Throttle fetch API calls to avoid rate limiting
-const throttle = pThrottle({ limit: 1, interval: 1000 });
-
-vi.stubGlobal('fetch', throttle(fetch));
-
 describe('index', () => {
   it('has options exported properly', () => {
     expect(jotform.options).toBeDefined();
@@ -43,8 +35,7 @@ describe('index', () => {
  * General
  */
 
-// API call takes ~12 seconds to complete, we can't wait this long
-describe.skip('getHistory()', () => {
+describe('getHistory()', () => {
   it('returns history data properly', async () => {
     const response = await jotform.getHistory();
 
@@ -74,12 +65,9 @@ describe('updateSettings()', () => {
   });
 });
 
-// Getting "User is not Allowed" error
-describe.skip('getSubusers()', () => {
-  it('returns subusers data properly', async () => {
-    const response = await jotform.getSubusers();
-
-    expect(response).toMatchObject(expect.any(Array));
+describe('getSubusers()', () => {
+  it('throws the authorization error returned by the API', async () => {
+    await expect(jotform.getSubusers()).rejects.toThrow('User is not Allowed');
   });
 });
 
@@ -467,14 +455,11 @@ describe('getFormReports()', () => {
   });
 });
 
-// Getting "You're not authorized to use (/report-id)" error
-describe.skip('getFormReport()', () => {
-  it('returns submission data properly', async () => {
-    const response = await jotform.getFormReport(TEST_FORM_ID, TEST_REPORT_ID);
-
-    expect(response).toMatchObject({
-      id: TEST_REPORT_ID,
-    });
+describe('getFormReport()', () => {
+  it('throws the authorization error returned by the API', async () => {
+    await expect(jotform.getFormReport(TEST_FORM_ID, TEST_REPORT_ID)).rejects.toThrow(
+      "You're not authorized to use (/report-id)",
+    );
   });
 });
 
@@ -762,71 +747,18 @@ describe('getLabels()', () => {
 });
 
 describe.sequential('label lifecycle', () => {
-  const createdLabel = {
-    id: 'created-label-id',
-    name: 'Test label',
-    color: '#FFFFFF',
-  };
   const resource = {
     id: TEST_FORM_ID,
     type: 'form',
   } as const;
-  const resourceBodySchema = z.object({
-    resources: z.array(
-      z.object({
-        id: z.string(),
-        type: z.string(),
-      }),
-    ),
-  });
-  const jotformResponse = (content: unknown) =>
-    HttpResponse.json({
-      responseCode: 200,
-      message: 'success',
-      content,
-    });
-  const server = setupServer(
-    http.post('https://api.jotform.com/label', async ({ request }) => {
-      const body = await request.formData();
-
-      return jotformResponse({
-        id: createdLabel.id,
-        name: body.get('name'),
-        color: body.get('color'),
-      });
-    }),
-    http.get('https://api.jotform.com/label/:labelId', ({ params }) =>
-      jotformResponse({
-        ...createdLabel,
-        id: params.labelId,
-      }),
-    ),
-    http.put('https://api.jotform.com/label/:labelId', async ({ request }) =>
-      jotformResponse(await request.json()),
-    ),
-    http.get('https://api.jotform.com/label/:labelId/resources', () => jotformResponse([])),
-    http.put('https://api.jotform.com/label/:labelId/add-resources', async ({ request }) => {
-      const body = resourceBodySchema.parse(await request.json());
-
-      return jotformResponse(body.resources);
-    }),
-    http.put('https://api.jotform.com/label/:labelId/remove-resources', async ({ request }) => {
-      const body = resourceBodySchema.parse(await request.json());
-
-      return jotformResponse(body.resources);
-    }),
-    http.delete('https://api.jotform.com/label/:labelId', () => jotformResponse(true)),
-  );
 
   let createdLabelId = '';
   let createLabelResponse: unknown;
 
   beforeAll(async () => {
-    server.listen({ onUnhandledRequest: 'bypass' });
-
     createLabelResponse = await jotform.createLabel({
-      name: createdLabel.name,
-      color: createdLabel.color,
+      name: 'Test label',
+      color: '#FFFFFF',
     });
 
     const objectWithIdResponse = objectWithIdSchema.parse(createLabelResponse);
@@ -835,12 +767,8 @@ describe.sequential('label lifecycle', () => {
   });
 
   afterAll(async () => {
-    try {
-      if (createdLabelId) {
-        await jotform.deleteLabel(createdLabelId);
-      }
-    } finally {
-      server.close();
+    if (createdLabelId) {
+      await jotform.deleteLabel(createdLabelId);
     }
   });
 
@@ -1012,14 +940,11 @@ describe('getReports()', () => {
   });
 });
 
-// Getting "You're not authorized to use (/report-id)" error
-describe.skip('getReport()', () => {
-  it('returns report data properly', async () => {
-    const response = await jotform.getReport(TEST_REPORT_ID);
-
-    expect(response).toMatchObject({
-      id: TEST_REPORT_ID,
-    });
+describe('getReport()', () => {
+  it('throws the authorization error returned by the API', async () => {
+    await expect(jotform.getReport(TEST_REPORT_ID)).rejects.toThrow(
+      "You're not authorized to use (/report-id)",
+    );
   });
 });
 

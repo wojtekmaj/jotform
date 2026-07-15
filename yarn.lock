@@ -675,7 +675,6 @@ __metadata:
     husky: "npm:^9.0.0"
     msw: "npm:^2.15.0"
     object-to-formdata: "npm:^4.5.1"
-    p-throttle: "npm:^7.0.0"
     typescript: "npm:^7.0.2"
     vitest: "npm:^4.1.8"
     zod: "npm:^4.0.0"
@@ -1092,13 +1091,6 @@ __metadata:
   version: 1.4.3
   resolution: "outvariant@npm:1.4.3"
   checksum: 10c0/5976ca7740349cb8c71bd3382e2a762b1aeca6f33dc984d9d896acdf3c61f78c3afcf1bfe9cc633a7b3c4b295ec94d292048f83ea2b2594fae4496656eba992c
-  languageName: node
-  linkType: hard
-
-"p-throttle@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "p-throttle@npm:7.0.0"
-  checksum: 10c0/7a9ca80826808b3d7f946369fc17a0ba020064c1bda9a5dfa74d2c9713f896576cdc4872bd61091ef2950d6a84072cac672bb1eb88a8b6a0c9e348d030623fc1
   languageName: node
   linkType: hard
 

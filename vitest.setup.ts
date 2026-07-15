@@ -1,12 +1,17 @@
+import { afterAll, beforeAll } from 'vitest';
+
 import * as jotform from './src/index.js';
+import { API_URL, server } from './test/mockServer.js';
 
-const JOTFORM_API_KEY = process.env.JOTFORM_API_KEY;
+beforeAll(() => {
+  server.listen({ onUnhandledRequest: 'error' });
+});
 
-if (!JOTFORM_API_KEY) {
-  throw new Error('JOTFORM_API_KEY is undefined');
-}
+afterAll(() => {
+  server.close();
+});
 
 jotform.options({
-  apiKey: JOTFORM_API_KEY,
-  debug: true,
+  apiKey: 'test-api-key',
+  url: API_URL,
 });
