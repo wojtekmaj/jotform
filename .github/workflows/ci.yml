@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: ['*']
   pull_request:
     branches: [main]
 
@@ -100,6 +100,6 @@ jobs:
         run: yarn --immutable
 
       - name: Run tests
-        run: yarn unit --testNamePattern='label lifecycle'
+        run: yarn unit
         env:
           JOTFORM_API_KEY: ${{ secrets.JOTFORM_API_KEY }}

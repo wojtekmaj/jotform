@@ -113,10 +113,6 @@ async function sendRequest<T>(
     }
   })();
 
-  if (url.startsWith(`${currentOptions.url}/label`)) {
-    console.log('Label response headers:', Object.fromEntries(response.headers));
-  }
-
   if (!response.ok) {
     const errorMessage =
       (typeof responseBody === 'object' ? responseBody.message : responseBody) ||

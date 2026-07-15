@@ -1,5 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { asyncForEach } from '@wojtekmaj/async-array-utils';
+import { HttpResponse, http } from 'msw';
+import { setupServer } from 'msw/node';
 import pThrottle from 'p-throttle';
 import { z } from 'zod';
 
@@ -760,16 +762,72 @@ describe('getLabels()', () => {
 });
 
 describe.sequential('label lifecycle', () => {
+  const createdLabel = {
+    id: 'created-label-id',
+    name: 'Test label',
+    color: '#FFFFFF',
+  };
   const resource = {
     id: TEST_FORM_ID,
     type: 'form',
   } as const;
+  const resourceBodySchema = z.object({
+    resources: z.array(
+      z.object({
+        id: z.string(),
+        type: z.string(),
+      }),
+    ),
+  });
+  const jotformResponse = (content: unknown) =>
+    HttpResponse.json({
+      responseCode: 200,
+      message: 'success',
+      content,
+    });
+  const server = setupServer(
+    http.post('https://api.jotform.com/label', async ({ request }) => {
+      const body = await request.formData();
+
+      return jotformResponse({
+        id: createdLabel.id,
+        name: body.get('name'),
+        color: body.get('color'),
+      });
+    }),
+    http.get('https://api.jotform.com/label/:labelId', ({ params }) =>
+      jotformResponse({
+        ...createdLabel,
+        id: params.labelId,
+      }),
+    ),
+    http.put('https://api.jotform.com/label/:labelId', async ({ request }) =>
+      jotformResponse(await request.json()),
+    ),
+    http.get('https://api.jotform.com/label/:labelId/resources', () => jotformResponse([])),
+    http.put('https://api.jotform.com/label/:labelId/add-resources', async ({ request }) => {
+      const body = resourceBodySchema.parse(await request.json());
+
+      return jotformResponse(body.resources);
+    }),
+    http.put('https://api.jotform.com/label/:labelId/remove-resources', async ({ request }) => {
+      const body = resourceBodySchema.parse(await request.json());
+
+      return jotformResponse(body.resources);
+    }),
+    http.delete('https://api.jotform.com/label/:labelId', () => jotformResponse(true)),
+  );
 
   let createdLabelId = '';
   let createLabelResponse: unknown;
 
   beforeAll(async () => {
-    createLabelResponse = await jotform.createLabel({ name: 'Test label', color: '#FFFFFF' });
+    server.listen({ onUnhandledRequest: 'bypass' });
+
+    createLabelResponse = await jotform.createLabel({
+      name: createdLabel.name,
+      color: createdLabel.color,
+    });
 
     const objectWithIdResponse = objectWithIdSchema.parse(createLabelResponse);
 
@@ -777,8 +835,12 @@ describe.sequential('label lifecycle', () => {
   });
 
   afterAll(async () => {
-    if (createdLabelId) {
-      await jotform.deleteLabel(createdLabelId);
+    try {
+      if (createdLabelId) {
+        await jotform.deleteLabel(createdLabelId);
+      }
+    } finally {
+      server.close();
     }
   });
 
