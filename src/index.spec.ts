@@ -25,10 +25,11 @@ const objectWithIdSchema = z.object({
 const objectWithQidSchema = z.object({ qid: z.number() });
 const objectWithSubmissionIdSchema = z.object({ submissionID: z.string() });
 
-// Throttle fetch API calls to avoid rate limiting
-const throttle = pThrottle({ limit: 1, interval: 2000, strict: true });
+// Jotform starts returning 502 responses from the label API after roughly 50 requests per minute.
+const perSecondThrottle = pThrottle({ limit: 1, interval: 1000, strict: true });
+const perMinuteThrottle = pThrottle({ limit: 50, interval: 60_000, strict: true });
 
-vi.stubGlobal('fetch', throttle(fetch));
+vi.stubGlobal('fetch', perMinuteThrottle(perSecondThrottle(fetch)));
 
 describe('index', () => {
   it('has options exported properly', () => {

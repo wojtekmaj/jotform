@@ -9,4 +9,5 @@ if (!JOTFORM_API_KEY) {
 jotform.options({
   apiKey: JOTFORM_API_KEY,
   debug: true,
+  timeout: 30_000,
 });
