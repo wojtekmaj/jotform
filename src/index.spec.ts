@@ -35,8 +35,7 @@ describe('index', () => {
  * General
  */
 
-// API call takes ~12 seconds to complete, we can't wait this long
-describe.skip('getHistory()', () => {
+describe('getHistory()', () => {
   it('returns history data properly', async () => {
     const response = await jotform.getHistory();
 
