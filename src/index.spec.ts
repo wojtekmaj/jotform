@@ -1,6 +1,5 @@
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { asyncForEach } from '@wojtekmaj/async-array-utils';
-import pThrottle from 'p-throttle';
 import { z } from 'zod';
 
 import * as jotform from './index.js';
@@ -25,11 +24,6 @@ const objectWithIdSchema = z.object({
 const objectWithQidSchema = z.object({ qid: z.number() });
 const objectWithSubmissionIdSchema = z.object({ submissionID: z.string() });
 
-// Throttle fetch API calls to avoid rate limiting
-const throttle = pThrottle({ limit: 1, interval: 1000 });
-
-vi.stubGlobal('fetch', throttle(fetch));
-
 describe('index', () => {
   it('has options exported properly', () => {
     expect(jotform.options).toBeDefined();
@@ -41,8 +35,7 @@ describe('index', () => {
  * General
  */
 
-// API call takes ~12 seconds to complete, we can't wait this long
-describe.skip('getHistory()', () => {
+describe('getHistory()', () => {
   it('returns history data properly', async () => {
     const response = await jotform.getHistory();
 
