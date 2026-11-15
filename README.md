@@ -9,12 +9,14 @@ Unofficial [Jotform API](https://api.jotform.com/docs/) Node.js Client with Type
 - Install by executing `npm install @wojtekmaj/jotform` or `yarn add @wojtekmaj/jotform`.
 - Import by adding `import * as jotform from '@wojtekmaj/jotform'`.
 - Authenticate:
+
   ```ts
   jotform.options({
     apiKey: 'YOUR_API_KEY',
   });
   ```
 - Do stuff with it!
+
   ```ts
   const user = await jotform.getUser();
   ```
@@ -109,16 +111,16 @@ features and to be more maintainable.
 
 Here's how the two packages compare:
 
-| Feature                | `jotform` v0       | `jotform` v1     | `@wojtekmaj/jotform` |
-| ---------------------- | ------------------ | ---------------- | -------------------- |
-| ESM support            | ❌                 | ❌               | ✅                   |
-| TypeScript support     | ❌                 | ✅               | ✅                   |
-| Jotform Teams support  | ❌                 | ❌               | ✅                   |
-| Tests                  | ❌                 | ✅               | ✅                   |
-| Methods available      | 36                 | 45               | 59                   |
-| Number of dependencies | 2                  | 2                | 1                    |
-| Bundle size            | 42.6 kB (min+gzip) | 28.1 kB (min+gzip) | 3.39 kB (min+gzip)    |
-| Install size           | 2.35 MB            | 2.33 MB          | 189 kB               |
+| Feature                | `jotform` v0       | `jotform` v1       | `@wojtekmaj/jotform` |
+| ---------------------- | ------------------ | ------------------ | -------------------- |
+| ESM support            | ❌                 | ❌                 | ✅                   |
+| TypeScript support     | ❌                 | ✅                 | ✅                   |
+| Jotform Teams support  | ❌                 | ❌                 | ✅                   |
+| Tests                  | ❌                 | ✅                 | ✅                   |
+| Methods available      | 36                 | 45                 | 59                   |
+| Number of dependencies | 2                  | 2                  | 1                    |
+| Bundle size            | 42.6 kB (min+gzip) | 28.1 kB (min+gzip) | 3.39 kB (min+gzip)   |
+| Install size           | 2.35 MB            | 2.33 MB            | 189 kB               |
 
 ## License
 
